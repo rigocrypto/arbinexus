@@ -2,6 +2,8 @@
 
 Oracle-informed arbitrage intelligence for Solana.
 
+https://docs.google.com/document/d/e/2PACX-1vQVMXoOJHKBM8CXrtgX0fWPPoyYD0TO6siyPXm2V0xc0dHDkv1Q6RLkUFMBtEyZw7XB9ad_ABmrpaoa/pub
+
 ArbiNexus compares live oracle fair value against live executable market quotes,
 classifies opportunities after fees, and provides explainable paper-trade simulation
 before any capital is committed.
