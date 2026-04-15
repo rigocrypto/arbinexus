@@ -153,7 +153,15 @@ export function RightRail() {
               </div>
             ))}
         </div>
-        <button className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#9945FF]/40 bg-gradient-to-r from-[#9945FF]/20 to-[#00C2FF]/20 px-3 py-2 text-sm font-medium text-zinc-100 hover:from-[#9945FF]/35 hover:to-[#00C2FF]/30">
+        <button
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#9945FF]/40 bg-gradient-to-r from-[#9945FF]/20 to-[#00C2FF]/20 px-3 py-2 text-sm font-medium text-zinc-100 hover:from-[#9945FF]/35 hover:to-[#00C2FF]/30"
+          onClick={() => {
+            const el = document.getElementById("opportunities");
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }}
+        >
           View All Opportunities
           <ChevronRight className="h-4 w-4" />
         </button>

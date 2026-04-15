@@ -16,7 +16,11 @@ async function bootstrap() {
   const app = Fastify({ logger: true });
 
   await app.register(cors, {
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+      "http://192.168.1.156:3000"
+    ],
     methods: ["GET", "POST", "OPTIONS"],
     credentials: true
   });

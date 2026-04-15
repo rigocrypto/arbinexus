@@ -8,3 +8,7 @@ coverage
 .env.local
 *.log
 .DS_Store
+
+docs/*.mp4
+docs/*.mov
+docs/*.webm

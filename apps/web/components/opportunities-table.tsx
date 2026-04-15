@@ -11,7 +11,8 @@ interface OpportunitiesResponse {
   message?: string;
   updatedAt?: string;
   health?: DataHealth;
-  items: Opportunity[];
+  items?: Opportunity[];
+  opportunities?: Opportunity[];
 }
 
 type DecisionAction = "simulate" | "track" | "ignore";
@@ -73,23 +74,30 @@ export function OpportunitiesTable() {
   useEffect(() => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
     let fallbackTimer: ReturnType<typeof setInterval> | null = null;
-    const hydrate = () => fetch(`${baseUrl}/opportunities`)
-      .then((res) => res.json() as Promise<OpportunitiesResponse>)
-      .then((data) => {
-        setRows(data.items ?? []);
-        setStatus(data.status ?? "ok");
-        setHealth(data.health ?? null);
-        setMessage(data.message ?? null);
-        setUpdatedAt(data.updatedAt ?? null);
-      })
-      .finally(() => setLoading(false));
+    const hydrate = () =>
+      fetch(`${baseUrl}/opportunities`)
+        .then((res) => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json() as Promise<OpportunitiesResponse>;
+        })
+        .then((data) => {
+          setRows(data.opportunities ?? data.items ?? []);
+          setStatus(data.status ?? "ok");
+          setHealth(data.health ?? null);
+          setMessage(data.message ?? null);
+          setUpdatedAt(data.updatedAt ?? null);
+        })
+        .catch((err) => {
+          console.warn("Opportunities fetch failed:", err.message);
+        })
+        .finally(() => setLoading(false));
 
     void hydrate();
 
     const stream = new EventSource(`${baseUrl}/stream/opportunities`);
     stream.onmessage = (event) => {
       const payload = JSON.parse(event.data) as OpportunitiesResponse;
-      setRows(payload.items ?? []);
+      setRows(payload.opportunities ?? payload.items ?? []);
       setStatus(payload.status ?? "ok");
       setHealth(payload.health ?? null);
       setMessage(payload.message ?? null);
@@ -183,10 +191,17 @@ export function OpportunitiesTable() {
       return;
     }
 
-    setRowActionState((previous) => ({
-      ...previous,
-      [row.symbol]: action === "track" ? "Tracked" : "Ignored"
-    }));
+    setRowActionState((previous) => {
+      // If already Ignored, clicking again will remove the Ignored state (undo)
+      if (previous[row.symbol] === "Ignored") {
+        const { [row.symbol]: _, ...rest } = previous;
+        return rest;
+      }
+      return {
+        ...previous,
+        [row.symbol]: action === "track" ? "Tracked" : "Ignored"
+      };
+    });
   }
 
   function actionLabel(row: Opportunity) {
