@@ -37,6 +37,8 @@ detect and explain in real time.
 
 ## Architecture
 
+![System Architecture](./docs/system-architecture.png)
+
 ```text
 Pyth Hermes + Jupiter v6
 					|
@@ -169,9 +171,11 @@ docs/
 
 ## Security Notes
 
-- Rotate any PAT that appears in terminal history or logs.
-- Keep secrets in environment variables, not profile scripts.
 
 ## License
 
 MIT
+
+## Resources
+
+- [Project Google Doc (Submission Writeup)](https://docs.google.com/document/d/1IAtaavGbsZUqsc8mlG6DQvJF13wl1W3P4xfAvNqsygk/edit?usp=sharing)
