@@ -31,15 +31,15 @@ export interface TrendPoint {
 }
 
 export const navItems: NavItem[] = [
-  { label: "Dashboard", href: "#" },
-  { label: "Opportunities", href: "#" },
-  { label: "Markets", href: "#" },
-  { label: "Oracle Feeds", href: "#" },
-  { label: "Simulation", href: "#" },
-  { label: "Portfolio", href: "#" },
-  { label: "Analytics", href: "#" },
-  { label: "Alerts", href: "#" },
-  { label: "Settings", href: "#" }
+  { label: "Dashboard", href: "#dashboard" },
+  { label: "Opportunities", href: "#opportunities" },
+  { label: "Markets", href: "#markets" },
+  { label: "Oracle Feeds", href: "#oracle-feeds" },
+  { label: "Simulation", href: "#simulation" },
+  { label: "Portfolio", href: "#portfolio" },
+  { label: "Analytics", href: "#analytics" },
+  { label: "Alerts", href: "#alerts" },
+  { label: "Settings", href: "#settings" }
 ];
 
 export const heroStats = [

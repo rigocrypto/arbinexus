@@ -28,13 +28,15 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="relative hidden overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#111427] to-[#0a0d18] p-6 xl:block">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_20%,rgba(153,69,255,0.28),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_45%_80%,rgba(0,194,255,0.24),transparent_40%)]" />
-        <div className="absolute left-1/2 top-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#14F195]/20" />
-        <div className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#9945FF]/35 shadow-[0_0_40px_rgba(153,69,255,0.5)]" />
-        <div className="absolute left-1/2 top-[56%] h-6 w-40 -translate-x-1/2 rounded-full bg-[#9945FF]/35 blur-lg" />
-        <div className="absolute left-1/2 top-[43%] h-16 w-16 -translate-x-1/2 -rotate-12 rounded-xl bg-gradient-to-br from-[#14F195] via-[#00C2FF] to-[#9945FF] shadow-[0_0_45px_rgba(20,241,149,0.35)]" />
+      <div className="relative hidden overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#111427] to-[#0a0d18] xl:block">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/solana-logo.mp4"
+        />
       </div>
     </section>
   );
