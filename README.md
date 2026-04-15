@@ -180,4 +180,6 @@ MIT
 
 ## Resources
 
-- [Project Google Doc (Submission Writeup)](https://docs.google.com/document/d/1IAtaavGbsZUqsc8mlG6DQvJF13wl1W3P4xfAvNqsygk/edit?usp=sharing)
+- [Project Google Doc (Submission Writeup)][submission-writeup]
+
+[submission-writeup]: https://docs.google.com/document/d/1IAtaavGbsZUqsc8mlG6DQvJF13wl1W3P4xfAvNqsygk/edit?usp=sharing
