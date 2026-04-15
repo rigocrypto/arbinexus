@@ -10,8 +10,6 @@ Built for the Colosseum Hackathon.
 
 ## Screenshot
 
-Add a clean dashboard screenshot before submission:
-
 ![ArbiNexus Dashboard](./docs/arbinexus-dashboard.png)
 
 ## Problem
