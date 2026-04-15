@@ -1,0 +1,12 @@
+{
+  "name": "@arbinexus/config",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "files": [
+    "tsconfig.base.json",
+    "tsconfig.next.json",
+    "tsconfig.node.json",
+    "tsconfig.package.json"
+  ]
+}

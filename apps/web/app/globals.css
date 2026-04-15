@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --sol-purple: #9945ff;
+  --sol-green: #14f195;
+  --sol-blue: #00c2ff;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 700px at 0% -10%, rgba(153, 69, 255, 0.22), transparent 55%),
+    radial-gradient(900px 500px at 90% -15%, rgba(0, 194, 255, 0.2), transparent 60%),
+    radial-gradient(850px 450px at 65% 85%, rgba(20, 241, 149, 0.08), transparent 60%),
+    linear-gradient(180deg, #050811 0%, #070d1b 55%, #050914 100%);
+  color: #eceff4;
+  font-feature-settings: "ss01", "ss02";
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(153, 69, 255, 0.5) transparent;
+}

@@ -1,0 +1,36 @@
+{
+  "name": "@arbinexus/web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@arbinexus/types": "workspace:*",
+    "@arbinexus/ui": "workspace:*",
+    "@solana/wallet-adapter-base": "^0.9.24",
+    "@solana/wallet-adapter-react": "^0.15.37",
+    "@solana/wallet-adapter-react-ui": "^0.9.37",
+    "@solana/wallet-adapter-wallets": "^0.19.36",
+    "@solana/web3.js": "^1.95.4",
+    "lucide-react": "^0.462.0",
+    "next": "15.1.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "recharts": "^2.15.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@arbinexus/types",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo \"No lint configured for @arbinexus/types\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

@@ -1,0 +1,9 @@
+[workspace]
+members = ["arbinexus"]
+
+[provider]
+cluster = "Devnet"
+wallet = "~/.config/solana/id.json"
+
+[programs.localnet]
+arbinexus = "Fg6PaFpoGXkYsidMpWxTWqkZx7r8Xx6YxAo7P5NDfN7"

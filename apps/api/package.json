@@ -1,0 +1,26 @@
+{
+  "name": "@arbinexus/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "lint": "echo \"No lint configured for @arbinexus/api\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@arbinexus/sdk": "workspace:*",
+    "@arbinexus/types": "workspace:*",
+    "@fastify/cors": "^10.0.1",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
