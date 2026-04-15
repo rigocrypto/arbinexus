@@ -78,3 +78,55 @@ To audit dependencies locally:
 
 ```bash
 pnpm audit
+```
+
+## Known Dependency Vulnerabilities
+
+Last verified: April 15, 2026 (`pnpm audit`)
+
+### follow-redirects moderate (transitive)
+
+- Package: `follow-redirects@1.16.0` (transitive)
+- Severity: Moderate
+- Status: No patched version published as of this date
+- Description: May leak custom auth headers on cross-domain redirects
+- Project impact: Low for current backend usage (unauthenticated public API reads, no outbound credential headers)
+- Plan: Upgrade immediately when upstream publishes a fix
+
+### lodash high/moderate (transitive in wallet adapter dependency chain)
+
+- Package: `lodash` (transitive through `@solana/wallet-adapter-wallets` and walletconnect chain)
+- Severity: 1 high + 2 moderate advisories
+- Status: Transitive-only; not a direct dependency in this repository
+- Project impact: Primarily in web wallet dependency surface, not backend execution paths
+- Plan: Track upstream wallet package releases and upgrade when patched versions are available
+
+### elliptic low (transitive)
+
+- Package: `elliptic` (transitive through wallet-related dependency chain)
+- Severity: Low
+- Status: Transitive-only; no direct dependency
+- Project impact: Low in current MVP scope
+- Plan: Resolve via upstream dependency updates
+
+## Risk Acceptance for Submission
+
+For the current hackathon submission, the above vulnerabilities are documented and accepted because:
+
+1. Exposure is transitive rather than from custom in-repo security code.
+2. Critical exploit preconditions are not present in current backend request flows.
+3. Immediate direct patches are not available for all findings without replacing core ecosystem dependencies.
+
+Post-submission actions:
+
+1. Re-run `pnpm audit` and apply updates as fixes become available.
+2. Minimize web wallet dependency surface where feasible.
+3. Prioritize dependency PRs that reduce known vulnerability count.
+
+## Reporting Security Issues
+
+If you discover a security issue in this repository:
+
+1. Do not open a public issue with exploit details.
+2. Provide a private report with impact and reproduction steps.
+3. Include affected package/path information from `pnpm audit` where possible.
