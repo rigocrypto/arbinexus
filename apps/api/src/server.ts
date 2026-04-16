@@ -12,15 +12,27 @@ import { registerExecuteRoute } from "./routes/execute.js";
 const port = Number(process.env.PORT ?? 3001);
 const host = process.env.HOST ?? "0.0.0.0";
 
+function isAllowedOrigin(origin: string) {
+  const localhostOrigins = ["http://localhost:3000", "http://127.0.0.1:3000"];
+  if (localhostOrigins.includes(origin)) {
+    return true;
+  }
+
+  // Allow common private-network hosts for local multi-device testing.
+  return /^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)\d+\.\d+:3000$/i.test(origin);
+}
+
 async function bootstrap() {
   const app = Fastify({ logger: true });
 
   await app.register(cors, {
-    origin: [
-      "http://localhost:3000",
-      "http://127.0.0.1:3000",
-      "http://192.168.1.156:3000"
-    ],
+    origin: (origin, cb) => {
+      if (!origin || isAllowedOrigin(origin)) {
+        cb(null, true);
+        return;
+      }
+      cb(new Error("Origin not allowed"), false);
+    },
     methods: ["GET", "POST", "OPTIONS"],
     credentials: true
   });
