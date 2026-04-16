@@ -12,7 +12,7 @@ Built for the Colosseum Hackathon.
 
 ## Screenshot
 
-![ArbiNexus Dashboard](./docs/arbinexus-dashboard.png)
+![ArbiNexus Dashboard](./docs/image-1776220428939.png)
 
 ## Problem
 
