@@ -24,23 +24,3 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgba(153, 69, 255, 0.5) transparent;
 }
-
-.card-interactive,
-.card-interactive-subtle {
-  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
-}
-
-@media (hover: hover) {
-  .card-interactive:hover {
-    transform: translateY(-2px);
-    border-color: rgba(153, 69, 255, 0.45);
-    background-color: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 18px 34px -26px rgba(0, 194, 255, 0.85);
-  }
-
-  .card-interactive-subtle:hover {
-    transform: translateY(-1px);
-    border-color: rgba(153, 69, 255, 0.3);
-    background-color: rgba(255, 255, 255, 0.08);
-  }
-}

@@ -52,7 +52,7 @@ export function KpiCards() {
         return (
           <div
             key={card.label}
-            className="group card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+            className="group rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-[#9945FF]/50 hover:bg-white/[0.05]"
           >
             <div className="mb-2 flex items-center justify-between text-xs text-zinc-500">
               <span>{card.label}</span>

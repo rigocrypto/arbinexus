@@ -119,7 +119,7 @@ export function RightRail() {
 
   return (
     <div className="space-y-4">
-      <section className="card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-zinc-100">Top Opportunities</h3>
           <button className="rounded-lg border border-white/10 px-2 py-1 text-xs text-zinc-400 hover:text-zinc-100">View all</button>
@@ -127,7 +127,7 @@ export function RightRail() {
         <div className="space-y-3">
           {liveTopOpportunities.length > 0
             ? liveTopOpportunities.map((item) => (
-              <div key={item.symbol} className="card-interactive-subtle flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+              <div key={item.symbol} className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-3 py-2">
                 <div>
                   <div className="font-medium text-zinc-100">{item.symbol}/USDC</div>
                   <div className="text-xs text-zinc-400">Oracle vs Market</div>
@@ -141,7 +141,7 @@ export function RightRail() {
               </div>
             ))
             : topOpportunities.map((item) => (
-              <div key={item.pair} className="card-interactive-subtle flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+              <div key={item.pair} className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-3 py-2">
                 <div>
                   <div className="font-medium text-zinc-100">{item.pair}</div>
                   <div className="text-xs text-zinc-400">{item.source}</div>
@@ -167,10 +167,10 @@ export function RightRail() {
         </button>
       </section>
 
-      <section className="card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
         <h3 className="mb-3 text-lg font-semibold text-zinc-100">Trust & Explainability</h3>
         <div className="space-y-2 text-sm">
-          <div className="card-interactive-subtle flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2">
+          <div className="flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2">
             <span className="text-zinc-300">Oracle Health</span>
             <span className="inline-flex items-center gap-2 text-zinc-100">
               <span className={"h-2 w-2 animate-pulse rounded-full " + providerDot(health?.pyth)} />
@@ -178,7 +178,7 @@ export function RightRail() {
             </span>
           </div>
 
-          <div className="card-interactive-subtle flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2">
+          <div className="flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2">
             <span className="text-zinc-300">Market Route Health</span>
             <span className="inline-flex items-center gap-2 text-zinc-100">
               <span className={"h-2 w-2 animate-pulse rounded-full " + providerDot(health?.jupiter)} />
@@ -186,7 +186,7 @@ export function RightRail() {
             </span>
           </div>
 
-          <div className="card-interactive-subtle rounded-lg border border-white/10 bg-black/20 px-3 py-2">
+          <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
             <div className="mb-1 text-zinc-400">Top Signal</div>
             {strongestSignal ? (
               <>
@@ -206,7 +206,7 @@ export function RightRail() {
             )}
           </div>
 
-          <div className="card-interactive-subtle rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs text-zinc-500">
+          <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs text-zinc-500">
             Updated {updatedAt ? new Date(updatedAt).toLocaleTimeString() : "-"} · Cache {health?.cacheAge ?? "-"}s
           </div>
 
@@ -221,10 +221,10 @@ export function RightRail() {
         </div>
       </section>
 
-      <section className="card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
         <h3 className="mb-2 text-lg font-semibold text-zinc-100">Wallet</h3>
         {!publicKey ? (
-          <div className="card-interactive-subtle rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-zinc-400">
+          <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-zinc-400">
             Connect wallet to view live balance.
           </div>
         ) : (
@@ -238,16 +238,16 @@ export function RightRail() {
         )}
       </section>
 
-      <section className="card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
         <h3 className="mb-2 text-lg font-semibold text-zinc-100">Decision Rules</h3>
         <div className="space-y-2 text-xs text-zinc-400">
-          <div className="card-interactive-subtle rounded-lg border border-white/10 bg-black/20 px-3 py-2">
+          <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
             Simulate when net edge is positive and confidence is elevated.
           </div>
-          <div className="card-interactive-subtle rounded-lg border border-white/10 bg-black/20 px-3 py-2">
+          <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
             Track if spread is narrow but can flip on minor quote drift.
           </div>
-          <div className="card-interactive-subtle rounded-lg border border-white/10 bg-black/20 px-3 py-2">
+          <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
             Ignore when fees dominate or liquidity impact is too high.
           </div>
         </div>
