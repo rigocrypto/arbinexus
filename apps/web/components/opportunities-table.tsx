@@ -294,7 +294,7 @@ export function OpportunitiesTable() {
 
               return (
               <Fragment key={row.symbol}>
-                <tr className="border-b border-zinc-900/80 transition hover:bg-white/[0.03]">
+                <tr className="border-b border-zinc-900/80 transition hover:bg-white/[0.03] hover:shadow-[inset_0_0_0_1px_rgba(153,69,255,0.15)]">
                   <td className="py-3 font-medium text-zinc-100">{row.symbol}</td>
                   <td className="py-3 text-zinc-300">${row.oraclePrice.toFixed(4)}</td>
                   <td className="py-3 text-zinc-300">${row.marketPrice.toFixed(4)}</td>

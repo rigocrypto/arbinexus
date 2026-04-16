@@ -6,7 +6,7 @@ import { Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, T
 export function MarketCharts() {
   return (
     <div className="grid gap-4 xl:grid-cols-2">
-      <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <section className="card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4">
         <div className="mb-3 text-lg font-semibold text-zinc-100">Spread % (SOL)</div>
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
@@ -29,7 +29,7 @@ export function MarketCharts() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <section className="card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4">
         <div className="mb-3 text-lg font-semibold text-zinc-100">Volume Scanned</div>
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
@@ -59,7 +59,7 @@ export function MarketCharts() {
 
       <section className="xl:col-span-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
         {footerKpis.map((item, index) => (
-          <div key={item.label} className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div key={item.label} className="card-interactive min-w-0 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <div className="text-xs text-zinc-500">{item.label}</div>
             <div className="mt-1 text-2xl font-semibold leading-tight tracking-tight text-zinc-100 sm:text-3xl">
               {item.value}

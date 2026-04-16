@@ -30,7 +30,7 @@ export function CoreSignalCards() {
         const Icon = card.icon;
 
         return (
-          <article key={card.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <article key={card.label} className="card-interactive rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-zinc-500">
               <Icon className="h-4 w-4 text-[#00C2FF]" />
               {card.label}
