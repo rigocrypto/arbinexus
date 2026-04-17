@@ -140,6 +140,10 @@ pnpm --filter @arbinexus/web dev
 
 Full script: see [docs/demo-script.md](docs/demo-script.md).
 
+## Demo Video
+
+- [ArbiNexus Video Demo](./docs/ArbiNexus-Video-Demo.mp4)
+
 ## Judging Criteria Alignment
 
 See [docs/judging-map.md](docs/judging-map.md) for a direct mapping to technical execution,
