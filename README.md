@@ -142,7 +142,8 @@ Full script: see [docs/demo-script.md](docs/demo-script.md).
 
 ## Demo Video
 
-- [ArbiNexus Video Demo](./docs/ArbiNexus-Video-Demo.mp4)
+- [ArbiNexus Video Demo (YouTube)](https://youtu.be/G2c4WNlbrwI)
+- [Local Backup Demo File](./docs/ArbiNexus-Video-Demo.mp4)
 
 ## Judging Criteria Alignment
 
