@@ -40,7 +40,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build site
-        run: pnpm --filter @arbinexus/site build
+        working-directory: apps/site
+        run: pnpm build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
