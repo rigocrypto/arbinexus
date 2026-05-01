@@ -82,32 +82,32 @@ pnpm audit
 
 ## Known Dependency Vulnerabilities
 
-Last verified: April 15, 2026 (`pnpm audit`)
+Last verified: May 1, 2026 (`pnpm audit --json`)
 
-### follow-redirects moderate (transitive)
+### Current status
 
-- Package: `follow-redirects@1.16.0` (transitive)
-- Severity: Moderate
-- Status: No patched version published as of this date
-- Description: May leak custom auth headers on cross-domain redirects
-- Project impact: Low for current backend usage (unauthenticated public API reads, no outbound credential headers)
-- Plan: Upgrade immediately when upstream publishes a fix
+- Resolved: 6 advisories via dependency overrides and lockfile updates
+- Remaining: 1 low-severity advisory (`elliptic`) with no upstream patched version currently available
 
-### lodash high/moderate (transitive in wallet adapter dependency chain)
+### Remediation applied
 
-- Package: `lodash` (transitive through `@solana/wallet-adapter-wallets` and walletconnect chain)
-- Severity: 1 high + 2 moderate advisories
-- Status: Transitive-only; not a direct dependency in this repository
-- Project impact: Primarily in web wallet dependency surface, not backend execution paths
-- Plan: Track upstream wallet package releases and upgrade when patched versions are available
+Workspace-level `pnpm` overrides were added for transitive dependencies:
 
-### elliptic low (transitive)
+- `lodash` -> `4.18.0`
+- `postcss` -> `8.5.13`
+- `protobufjs` -> `7.5.5`
+- `uuid` -> `14.0.0`
 
-- Package: `elliptic` (transitive through wallet-related dependency chain)
+These overrides addressed the previously open `protobufjs`, `lodash`, `postcss`, and `uuid` advisories.
+
+### Remaining accepted risk: elliptic (low)
+
+- Package: `elliptic@6.6.1` (transitive)
+- Source path: wallet-adapter torus-related dependency chain
 - Severity: Low
-- Status: Transitive-only; no direct dependency
-- Project impact: Low in current MVP scope
-- Plan: Resolve via upstream dependency updates
+- Status: No patched upstream release currently available for this chain
+- Project impact: Low for current MVP scope; package is not directly used in application business logic
+- Mitigation: Keep dependency overrides in place for all patchable advisories and update immediately when upstream publishes a fix
 
 ## Risk Acceptance for Submission
 
@@ -121,7 +121,7 @@ Post-submission actions:
 
 1. Re-run `pnpm audit` and apply updates as fixes become available.
 2. Minimize web wallet dependency surface where feasible.
-3. Prioritize dependency PRs that reduce known vulnerability count.
+3. Prioritize upstream wallet adapter updates that remove the remaining `elliptic` finding.
 
 ## Reporting Security Issues
 
