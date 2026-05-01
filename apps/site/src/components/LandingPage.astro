@@ -25,6 +25,27 @@ const stackCards = isEs
     ];
 const roadmapNearLabel = isEs ? 'Corto plazo' : 'Near term';
 const roadmapLongLabel = isEs ? 'Largo plazo' : 'Long term';
+const galleryLabels = isEs
+  ? {
+      open: 'Abrir captura',
+      close: 'Cerrar',
+      zoomIn: 'Acercar',
+      zoomOut: 'Alejar',
+      reset: 'Reiniciar vista',
+      prev: 'Anterior',
+      next: 'Siguiente',
+      hint: 'Usa la rueda del mouse para acercar/alejar y arrastra para mover.'
+    }
+  : {
+      open: 'Open screenshot',
+      close: 'Close',
+      zoomIn: 'Zoom in',
+      zoomOut: 'Zoom out',
+      reset: 'Reset view',
+      prev: 'Previous',
+      next: 'Next',
+      hint: 'Use mouse wheel to zoom and drag to pan.'
+    };
 const screenshots = [
   {
     src: `${import.meta.env.BASE_URL}screenshots/dashboard-overview.png`,
@@ -103,13 +124,43 @@ const screenshots = [
       <a class="text-link" href="https://github.com/rigocrypto/arbinexus#running-locally" target="_blank" rel="noreferrer">{localSetupLabel}</a>
     </div>
     <div class="shot-grid">
-      {screenshots.map((shot) => (
+      {screenshots.map((shot, index) => (
         <figure class="shot-card inset">
-          <img src={shot.src} alt={shot.alt} loading="lazy" />
+          <button
+            class="shot-trigger"
+            type="button"
+            data-gallery-trigger
+            data-index={index}
+            data-src={shot.src}
+            data-alt={shot.alt}
+            aria-label={`${galleryLabels.open}: ${shot.alt}`}
+          >
+            <img src={shot.src} alt={shot.alt} loading="lazy" />
+          </button>
         </figure>
       ))}
     </div>
+    <p class="gallery-hint">{galleryLabels.hint}</p>
   </section>
+
+  <div class="gallery-lightbox" id="gallery-lightbox" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label={content.sections.screenshots}>
+    <button class="lightbox-backdrop" type="button" data-gallery-close aria-label={galleryLabels.close}></button>
+    <div class="lightbox-panel panel">
+      <div class="lightbox-toolbar">
+        <button type="button" data-gallery-prev>{galleryLabels.prev}</button>
+        <button type="button" data-gallery-next>{galleryLabels.next}</button>
+        <span class="toolbar-spacer"></span>
+        <button type="button" data-gallery-zoom-out>{galleryLabels.zoomOut}</button>
+        <button type="button" data-gallery-reset>{galleryLabels.reset}</button>
+        <button type="button" data-gallery-zoom-in>{galleryLabels.zoomIn}</button>
+        <button type="button" data-gallery-close>{galleryLabels.close}</button>
+      </div>
+      <div class="lightbox-stage" id="lightbox-stage">
+        <img id="lightbox-image" src="" alt="" draggable="false" />
+      </div>
+      <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+  </div>
 
   <section id="demo" class="panel split demo-block">
     <div>
@@ -168,3 +219,130 @@ const screenshots = [
     </div>
   </section>
 </div>
+
+<script>
+  (() => {
+    const triggers = Array.from(document.querySelectorAll('[data-gallery-trigger]'));
+    const lightbox = document.getElementById('gallery-lightbox');
+    const image = document.getElementById('lightbox-image');
+    const caption = document.getElementById('lightbox-caption');
+    const stage = document.getElementById('lightbox-stage');
+    if (!triggers.length || !lightbox || !image || !caption || !stage) return;
+
+    const items = triggers.map((trigger) => ({
+      src: trigger.getAttribute('data-src') || '',
+      alt: trigger.getAttribute('data-alt') || ''
+    }));
+
+    let current = 0;
+    let isOpen = false;
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+    const renderTransform = () => {
+      image.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      image.style.cursor = scale > 1 ? (dragging ? 'grabbing' : 'grab') : 'zoom-in';
+    };
+
+    const resetView = () => {
+      scale = 1;
+      x = 0;
+      y = 0;
+      renderTransform();
+    };
+
+    const loadItem = (index) => {
+      current = (index + items.length) % items.length;
+      image.src = items[current].src;
+      image.alt = items[current].alt;
+      caption.textContent = items[current].alt;
+      resetView();
+    };
+
+    const openLightbox = (index) => {
+      loadItem(index);
+      isOpen = true;
+      lightbox.hidden = false;
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('no-scroll');
+    };
+
+    const closeLightbox = () => {
+      isOpen = false;
+      lightbox.hidden = true;
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('no-scroll');
+    };
+
+    const updateZoom = (delta) => {
+      scale = clamp(scale + delta, 1, 4);
+      if (scale === 1) {
+        x = 0;
+        y = 0;
+      }
+      renderTransform();
+    };
+
+    triggers.forEach((trigger, index) => {
+      trigger.addEventListener('click', () => openLightbox(index));
+    });
+
+    lightbox.querySelectorAll('[data-gallery-close]').forEach((button) => {
+      button.addEventListener('click', closeLightbox);
+    });
+
+    lightbox.querySelector('[data-gallery-prev]')?.addEventListener('click', () => loadItem(current - 1));
+    lightbox.querySelector('[data-gallery-next]')?.addEventListener('click', () => loadItem(current + 1));
+    lightbox.querySelector('[data-gallery-zoom-in]')?.addEventListener('click', () => updateZoom(0.25));
+    lightbox.querySelector('[data-gallery-zoom-out]')?.addEventListener('click', () => updateZoom(-0.25));
+    lightbox.querySelector('[data-gallery-reset]')?.addEventListener('click', resetView);
+
+    stage.addEventListener('wheel', (event) => {
+      if (!isOpen) return;
+      event.preventDefault();
+      updateZoom(event.deltaY < 0 ? 0.2 : -0.2);
+    }, { passive: false });
+
+    image.addEventListener('pointerdown', (event) => {
+      if (scale <= 1) return;
+      dragging = true;
+      startX = event.clientX - x;
+      startY = event.clientY - y;
+      image.setPointerCapture(event.pointerId);
+      renderTransform();
+    });
+
+    image.addEventListener('pointermove', (event) => {
+      if (!dragging || scale <= 1) return;
+      x = event.clientX - startX;
+      y = event.clientY - startY;
+      renderTransform();
+    });
+
+    image.addEventListener('pointerup', () => {
+      dragging = false;
+      renderTransform();
+    });
+
+    image.addEventListener('pointercancel', () => {
+      dragging = false;
+      renderTransform();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!isOpen) return;
+      if (event.key === 'Escape') closeLightbox();
+      if (event.key === 'ArrowRight') loadItem(current + 1);
+      if (event.key === 'ArrowLeft') loadItem(current - 1);
+      if (event.key === '+' || event.key === '=') updateZoom(0.25);
+      if (event.key === '-') updateZoom(-0.25);
+      if (event.key === '0') resetView();
+    });
+  })();
+</script>

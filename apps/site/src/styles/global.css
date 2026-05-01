@@ -300,12 +300,112 @@ h3 {
   padding: 0.45rem;
 }
 
+.shot-trigger {
+  all: unset;
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+}
+
+.shot-trigger:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  border-radius: 0.72rem;
+}
+
 .shot-card img {
   width: 100%;
   border-radius: 0.65rem;
   display: block;
   aspect-ratio: 16 / 10;
   object-fit: cover;
+}
+
+.gallery-hint {
+  margin: 0.8rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(1, 4, 12, 0.78);
+  backdrop-filter: blur(4px);
+}
+
+.lightbox-panel {
+  position: relative;
+  z-index: 1;
+  width: min(1080px, 96vw);
+  padding: 0.9rem;
+}
+
+.lightbox-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.7rem;
+}
+
+.lightbox-toolbar button {
+  border: 1px solid var(--line);
+  background: rgba(2, 10, 24, 0.8);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.lightbox-toolbar button:hover,
+.lightbox-toolbar button:focus-visible {
+  border-color: var(--blue);
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.lightbox-stage {
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: rgba(2, 8, 20, 0.92);
+  min-height: 320px;
+  max-height: 72vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+}
+
+.lightbox-stage img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  transform-origin: center center;
+  transition: transform 120ms ease;
+  user-select: none;
+}
+
+.lightbox-caption {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.no-scroll {
+  overflow: hidden;
 }
 
 .video-shell {
@@ -378,6 +478,19 @@ h3 {
   .site-header,
   .site-footer {
     width: min(100%, 94vw);
+  }
+
+  .lightbox-panel {
+    width: min(100%, 98vw);
+    padding: 0.65rem;
+  }
+
+  .lightbox-stage {
+    min-height: 240px;
+  }
+
+  .toolbar-spacer {
+    display: none;
   }
 
   .panel {
