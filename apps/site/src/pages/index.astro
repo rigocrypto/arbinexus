@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LandingPage from '../components/LandingPage.astro';
+import type { LandingContent } from '../components/types';
+
+const content: LandingContent = {
+  locale: 'en',
+  langLabel: 'Built for Solana operators, judges, and future partners',
+  pageTitle: 'ArbiNexus | Oracle-Informed Price Dislocation Intelligence for Solana',
+  metaDescription: 'ArbiNexus compares Pyth oracle fair value with executable Jupiter quotes to detect meaningful price dislocations on Solana and explain when a signal is worth attention.',
+  headline: "Don't just show prices — show when they are wrong.",
+  subheadline: 'ArbiNexus detects meaningful price dislocations on Solana using Pyth oracle data and Jupiter executable quotes.',
+  proofStrip: [
+    'Live Pyth integration',
+    'Live Jupiter executable quotes',
+    'Confidence-aware signal engine',
+    'Paper-trade simulation',
+    'Built for Solana'
+  ],
+  problemTitle: 'Raw prices are noisy. Actionable price dislocations are not.',
+  problemBody: [
+    'ArbiNexus exists because displayed prices alone do not tell traders whether a market is actually offside relative to fair value. On Solana, route-dependent execution and confidence bands matter.',
+    'The product compares oracle fair value against executable market quotes, filters noise using confidence intervals, and surfaces decision-ready signals with rationale instead of a wall of disconnected numbers.'
+  ],
+  howTitle: 'A compact signal pipeline from data ingestion to operator judgment.',
+  howSteps: [
+    { title: 'Ingest', body: 'Fetch Pyth oracle fair value, confidence intervals, and Jupiter executable quotes for supported assets.' },
+    { title: 'Evaluate', body: 'Normalize prices, model execution friction, reject stale inputs, and suppress signals inside the confidence-noise band.' },
+    { title: 'Act', body: 'Classify opportunities, explain the rationale, and preview a paper trade before any capital is committed.' }
+  ],
+  differentiatorsTitle: 'Why ArbiNexus feels different from a generic dashboard.',
+  differentiators: [
+    'Executable-price aware: it uses Jupiter quotes, not static displayed prices.',
+    'Confidence filtered: oracle confidence bands reduce false positives.',
+    'Simulation first: the user can preview a trade before any execution path.',
+    'Explainable: every signal carries a rationale instead of black-box output.',
+    'Operationally transparent: provider health and architecture are visible.'
+  ],
+  roadmapTitle: 'Built as an MVP, aimed at a larger intelligence layer.',
+  roadmapNear: [
+    'Route-specific dynamic fee modeling',
+    'Broader supported asset coverage',
+    'Signal history and performance tracking',
+    'Alerting for actionable dislocations'
+  ],
+  roadmapLong: [
+    'API access for signal consumers',
+    'Execution hooks for advanced users',
+    'Multi-market monitoring',
+    'RWA and tokenized commodity dislocation coverage'
+  ],
+  ctas: {
+    demo: 'Watch Demo',
+    github: 'View Code',
+    docs: 'Read Docs'
+  },
+  sections: {
+    proof: 'Proof strip',
+    problem: 'Problem',
+    how: 'How it works',
+    screenshots: 'Screenshots',
+    demo: 'Demo',
+    why: 'Why ArbiNexus',
+    stack: 'Tech stack',
+    roadmap: 'Roadmap'
+  },
+  screenshotCaption: 'Screens, architecture, and branding pulled from the working project.',
+  demoBlurb: 'Watch the live walkthrough of the current MVP.',
+  footerTagline: 'Oracle-informed price dislocation intelligence for Solana.'
+};
+---
+
+<BaseLayout
+  title={content.pageTitle}
+  description={content.metaDescription}
+  locale="en"
+  path="/"
+  alternates={[
+    { lang: 'en', path: '/' },
+    { lang: 'es', path: '/es/' }
+  ]}
+>
+  <LandingPage content={content} />
+</BaseLayout>

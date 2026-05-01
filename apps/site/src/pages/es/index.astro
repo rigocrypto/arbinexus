@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LandingPage from '../../components/LandingPage.astro';
+import type { LandingContent } from '../../components/types';
+
+const content: LandingContent = {
+  locale: 'es',
+  langLabel: 'Construido para operadores de Solana, jueces y futuros aliados',
+  pageTitle: 'ArbiNexus | Inteligencia de dislocación de precios para Solana',
+  metaDescription: 'ArbiNexus compara el valor justo del oráculo Pyth con cotizaciones ejecutables de Jupiter para detectar dislocaciones de precio relevantes en Solana.',
+  headline: 'No solo mostramos precios — mostramos cuándo están mal.',
+  subheadline: 'ArbiNexus detecta dislocaciones de precio en Solana usando datos del oráculo Pyth y cotizaciones ejecutables de Jupiter.',
+  proofStrip: [
+    'Integración en vivo con Pyth',
+    'Cotizaciones ejecutables de Jupiter',
+    'Motor de señales con intervalos de confianza',
+    'Simulación paper-trade',
+    'Construido para Solana'
+  ],
+  problemTitle: 'Los precios sin contexto generan ruido. Las dislocaciones accionables no.',
+  problemBody: [
+    'ArbiNexus existe porque ver precios aislados no le dice al operador si el mercado realmente está fuera de lugar frente al valor justo. En Solana importan la ejecución por ruta y los intervalos de confianza.',
+    'El producto compara valor justo del oráculo contra cotizaciones ejecutables, filtra ruido con intervalos de confianza y muestra señales explicables en lugar de una pared de números sin contexto.'
+  ],
+  howTitle: 'Una canalización compacta desde la ingesta de datos hasta la decisión.',
+  howSteps: [
+    { title: 'Ingesta', body: 'Obtiene valor justo del oráculo Pyth, intervalos de confianza y cotizaciones ejecutables de Jupiter para los activos soportados.' },
+    { title: 'Evaluación', body: 'Normaliza precios, modela fricción de ejecución, descarta datos obsoletos y elimina señales dentro de la banda de ruido.' },
+    { title: 'Acción', body: 'Clasifica oportunidades, explica la razón y permite simular una operación antes de comprometer capital.' }
+  ],
+  differentiatorsTitle: 'Por qué ArbiNexus se siente distinto a un dashboard genérico.',
+  differentiators: [
+    'Considera precios ejecutables: usa cotizaciones de Jupiter, no precios estáticos.',
+    'Filtra por confianza: los intervalos del oráculo reducen falsos positivos.',
+    'Simulación primero: el usuario puede previsualizar una operación antes de ejecutarla.',
+    'Explicable: cada señal incluye una razón clara.',
+    'Transparente: la salud de proveedores y la arquitectura están visibles.'
+  ],
+  roadmapTitle: 'Construido como MVP, apuntando a una capa de inteligencia mayor.',
+  roadmapNear: [
+    'Modelo dinámico de comisiones por ruta',
+    'Mayor cobertura de activos',
+    'Historial y seguimiento de señales',
+    'Alertas para dislocaciones accionables'
+  ],
+  roadmapLong: [
+    'API para consumidores de señales',
+    'Hooks de ejecución para usuarios avanzados',
+    'Cobertura multi-mercado',
+    'Monitoreo de commodities tokenizados y RWA'
+  ],
+  ctas: {
+    demo: 'Ver demo',
+    github: 'Ver código',
+    docs: 'Leer docs'
+  },
+  sections: {
+    proof: 'Prueba',
+    problem: 'Problema',
+    how: 'Cómo funciona',
+    screenshots: 'Capturas',
+    demo: 'Demo',
+    why: 'Por qué ArbiNexus',
+    stack: 'Stack',
+    roadmap: 'Roadmap'
+  },
+  screenshotCaption: 'Pantallas, arquitectura y marca extraídas del proyecto funcional.',
+  demoBlurb: 'Mira el recorrido en vivo del MVP actual.',
+  footerTagline: 'Inteligencia de dislocación de precios para Solana.'
+};
+---
+
+<BaseLayout
+  title={content.pageTitle}
+  description={content.metaDescription}
+  locale="es"
+  path="/es/"
+  alternates={[
+    { lang: 'en', path: '/' },
+    { lang: 'es', path: '/es/' }
+  ]}
+>
+  <LandingPage content={content} />
+</BaseLayout>

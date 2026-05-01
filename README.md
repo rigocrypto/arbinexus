@@ -145,6 +145,26 @@ Full script: see [docs/demo-script.md](docs/demo-script.md).
 - [ArbiNexus Video Demo (YouTube)](https://youtu.be/G2c4WNlbrwI)
 - [Local Backup Demo File](./docs/ArbiNexus-Video-Demo.mp4)
 
+## Landing Page
+
+ArbiNexus now includes a static marketing site at `apps/site` for GitHub Pages.
+
+- Local dev: `pnpm site:dev`
+- Build only: `pnpm site:build`
+- Expected production URL: `https://rigocrypto.github.io/arbinexus/`
+
+Language routes:
+
+- English: `/arbinexus/`
+- Spanish: `/arbinexus/es/`
+
+### GitHub Pages Setup
+
+1. Go to repository Settings > Pages.
+2. In Build and deployment, select Source: GitHub Actions.
+3. Push to `main` with changes under `apps/site/**`.
+4. Workflow `.github/workflows/deploy-site.yml` builds and deploys automatically.
+
 ## Judging Criteria Alignment
 
 See [docs/judging-map.md](docs/judging-map.md) for a direct mapping to technical execution,

@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+
+const {
+  title,
+  description,
+  locale,
+  path,
+  alternates
+} = Astro.props as {
+  title: string;
+  description: string;
+  locale: 'en' | 'es';
+  path: string;
+  alternates: Array<{ lang: string; path: string }>;
+};
+
+const site = 'https://rigocrypto.github.io';
+const base = '/arbinexus';
+const url = `${site}${base}${path}`;
+const ogImage = `${site}${base}/brand/og-image.png`;
+const navText = locale === 'es'
+  ? { problem: 'Problema', how: 'Como funciona', demo: 'Demo', roadmap: 'Roadmap' }
+  : { problem: 'Problem', how: 'How It Works', demo: 'Demo', roadmap: 'Roadmap' };
+const footer = locale === 'es'
+  ? { tagline: 'No solo mostramos precios. Mostramos cuando estan mal.', docs: 'Docs' }
+  : { tagline: "Don't just show prices. Show when they are wrong.", docs: 'Docs' };
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="Solana arbitrage tool, oracle price dislocation, Pyth Jupiter integration, Solana DeFi signals, executable quote intelligence" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={url} />
+    <link rel="icon" type="image/jpeg" href={`${import.meta.env.BASE_URL}brand/favicon.jpeg`} />
+    {alternates.map((alternate) => (
+      <link rel="alternate" hreflang={alternate.lang} href={`${site}${base}${alternate.path}`} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={`${site}${base}/`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={locale === 'es' ? 'es_ES' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'ArbiNexus',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      description,
+      url,
+      creator: {
+        '@type': 'Organization',
+        name: 'RigoCrypto'
+      },
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD'
+      }
+    })} />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href={`${import.meta.env.BASE_URL}${locale === 'es' ? 'es/' : ''}`}>
+        <img src={`${import.meta.env.BASE_URL}brand/arbinexus-mark.png`} alt="ArbiNexus mark" />
+        <div>
+          <strong>ArbiNexus</strong>
+          <span>Oracle-informed price intelligence</span>
+        </div>
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="#problem">{navText.problem}</a>
+        <a href="#how-it-works">{navText.how}</a>
+        <a href="#demo">{navText.demo}</a>
+        <a href="#roadmap">{navText.roadmap}</a>
+      </nav>
+      <div class="lang-switcher" aria-label="Language selector">
+        <a href={`${import.meta.env.BASE_URL}`} aria-current={locale === 'en' ? 'page' : undefined}>EN</a>
+        <a href={`${import.meta.env.BASE_URL}es/`} aria-current={locale === 'es' ? 'page' : undefined}>ES</a>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div>
+        <strong>ArbiNexus</strong>
+        <p>{footer.tagline}</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/rigocrypto/arbinexus" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://youtu.be/G2c4WNlbrwI" target="_blank" rel="noreferrer">Demo</a>
+        <a href="https://github.com/rigocrypto/arbinexus/blob/main/docs/submission-copy.md" target="_blank" rel="noreferrer">{footer.docs}</a>
+      </div>
+    </footer>
+  </body>
+</html>
