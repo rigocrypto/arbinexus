@@ -336,6 +336,10 @@ h3 {
   padding: 1rem;
 }
 
+.gallery-lightbox[hidden] {
+  display: none;
+}
+
 .lightbox-backdrop {
   position: absolute;
   inset: 0;
