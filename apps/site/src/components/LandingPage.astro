@@ -143,7 +143,7 @@ const screenshots = [
     <p class="gallery-hint">{galleryLabels.hint}</p>
   </section>
 
-  <div class="gallery-lightbox" id="gallery-lightbox" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label={content.sections.screenshots}>
+  <div class="gallery-lightbox" id="gallery-lightbox" hidden inert role="dialog" aria-modal="true" aria-label={content.sections.screenshots}>
     <button class="lightbox-backdrop" type="button" data-gallery-close aria-label={galleryLabels.close}></button>
     <div class="lightbox-panel panel">
       <div class="lightbox-toolbar">
@@ -229,6 +229,13 @@ const screenshots = [
     const stage = document.getElementById('lightbox-stage');
     if (!triggers.length || !lightbox || !image || !caption || !stage) return;
 
+    const firstCloseButton = lightbox.querySelector('[data-gallery-close]');
+    const prevButton = lightbox.querySelector('[data-gallery-prev]');
+    const nextButton = lightbox.querySelector('[data-gallery-next]');
+    const zoomInButton = lightbox.querySelector('[data-gallery-zoom-in]');
+    const zoomOutButton = lightbox.querySelector('[data-gallery-zoom-out]');
+    const resetButton = lightbox.querySelector('[data-gallery-reset]');
+
     const items = triggers.map((trigger) => ({
       src: trigger.getAttribute('data-src') || '',
       alt: trigger.getAttribute('data-alt') || ''
@@ -242,12 +249,14 @@ const screenshots = [
     let dragging = false;
     let startX = 0;
     let startY = 0;
+    let lastFocused = null;
 
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
     const renderTransform = () => {
       image.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
       image.style.cursor = scale > 1 ? (dragging ? 'grabbing' : 'grab') : 'zoom-in';
+      image.style.transition = dragging ? 'none' : 'transform 120ms ease';
     };
 
     const resetView = () => {
@@ -266,22 +275,40 @@ const screenshots = [
     };
 
     const openLightbox = (index) => {
+      lastFocused = document.activeElement;
       loadItem(index);
       isOpen = true;
       lightbox.hidden = false;
-      lightbox.setAttribute('aria-hidden', 'false');
+      lightbox.removeAttribute('inert');
       document.body.classList.add('no-scroll');
+      firstCloseButton?.focus();
     };
 
     const closeLightbox = () => {
       isOpen = false;
+      dragging = false;
       lightbox.hidden = true;
-      lightbox.setAttribute('aria-hidden', 'true');
+      lightbox.setAttribute('inert', '');
       document.body.classList.remove('no-scroll');
+      if (lastFocused instanceof HTMLElement) {
+        lastFocused.focus();
+      }
     };
 
-    const updateZoom = (delta) => {
-      scale = clamp(scale + delta, 1, 4);
+    const updateZoom = (delta, clientX, clientY) => {
+      const nextScale = clamp(scale + delta, 1, 4);
+      if (nextScale === scale) return;
+
+      if (typeof clientX === 'number' && typeof clientY === 'number') {
+        const rect = stage.getBoundingClientRect();
+        const cursorX = clientX - rect.left - rect.width / 2;
+        const cursorY = clientY - rect.top - rect.height / 2;
+        const factor = nextScale / scale;
+        x = cursorX - (cursorX - x) * factor;
+        y = cursorY - (cursorY - y) * factor;
+      }
+
+      scale = nextScale;
       if (scale === 1) {
         x = 0;
         y = 0;
@@ -297,16 +324,16 @@ const screenshots = [
       button.addEventListener('click', closeLightbox);
     });
 
-    lightbox.querySelector('[data-gallery-prev]')?.addEventListener('click', () => loadItem(current - 1));
-    lightbox.querySelector('[data-gallery-next]')?.addEventListener('click', () => loadItem(current + 1));
-    lightbox.querySelector('[data-gallery-zoom-in]')?.addEventListener('click', () => updateZoom(0.25));
-    lightbox.querySelector('[data-gallery-zoom-out]')?.addEventListener('click', () => updateZoom(-0.25));
-    lightbox.querySelector('[data-gallery-reset]')?.addEventListener('click', resetView);
+    prevButton?.addEventListener('click', () => loadItem(current - 1));
+    nextButton?.addEventListener('click', () => loadItem(current + 1));
+    zoomInButton?.addEventListener('click', () => updateZoom(0.25));
+    zoomOutButton?.addEventListener('click', () => updateZoom(-0.25));
+    resetButton?.addEventListener('click', resetView);
 
     stage.addEventListener('wheel', (event) => {
       if (!isOpen) return;
       event.preventDefault();
-      updateZoom(event.deltaY < 0 ? 0.2 : -0.2);
+      updateZoom(event.deltaY < 0 ? 0.2 : -0.2, event.clientX, event.clientY);
     }, { passive: false });
 
     image.addEventListener('pointerdown', (event) => {
