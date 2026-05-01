@@ -100,6 +100,7 @@ The current MVP includes:
 
 ### MVP Upgrades
 ![ArbiNexus MVP Upgrades](https://rigocrypto.github.io/arbinexus/screenshots/mvp-upgrades.png)
+![ArbiNexus MVP Upgrades Detail](https://rigocrypto.github.io/arbinexus/screenshots/mvp-upgrades-2.png)
 
 ### System Architecture
 ![ArbiNexus System Architecture](https://rigocrypto.github.io/arbinexus/screenshots/system-architecture.png)
