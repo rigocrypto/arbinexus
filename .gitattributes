@@ -1,0 +1,50 @@
+# Default: auto-detect text files, normalize to LF in repo
+* text=auto eol=lf
+
+# Lock files - always LF
+*.lock text eol=lf
+*.lockb text eol=lf
+pnpm-lock.yaml text eol=lf
+
+# Config files - always LF
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+
+# Source code - always LF
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+
+# Shell and CI scripts - always LF
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Windows-only files - keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files - never touch
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.ico binary
+*.webp binary
+*.mp4 binary
+*.mov binary
+*.webm binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
