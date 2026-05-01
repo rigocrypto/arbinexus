@@ -1,210 +1,503 @@
 # ArbiNexus
 
-Oracle-informed arbitrage intelligence for Solana.
+> **Oracle-Informed Price Dislocation Intelligence for Solana**
+> 
+> Don't just show prices — show when they are wrong.
 
-[Public project overview](https://docs.google.com/document/d/e/2PACX-1vQVMXoOJHKBM8CXrtgX0fWPPoyYD0TO6siyPXm2V0xc0dHDkv1Q6RLkUFMBtEyZw7XB9ad_ABmrpaoa/pub)
+[![Live Site](https://img.shields.io/badge/Live%20Site-rigocrypto.github.io-purple)](https://rigocrypto.github.io/arbinexus/)
+[![Demo Video](https://img.shields.io/badge/Demo-YouTube-red)](https://youtu.be/G2c4WNlbrwI)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Built for Solana](https://img.shields.io/badge/Built%20for-Solana-9945FF)](https://solana.com)
 
-ArbiNexus compares live oracle fair value against live executable market quotes,
-classifies opportunities after fees, and provides explainable paper-trade simulation
-before any capital is committed.
+---
 
-Built for the Colosseum Hackathon.
+## 🌐 Live Links
 
-## Screenshot
+| Resource | URL |
+|----------|-----|
+| 🌍 **Landing Page (English)** | https://rigocrypto.github.io/arbinexus/ |
+| 🇪🇸 **Landing Page (Español)** | https://rigocrypto.github.io/arbinexus/es/ |
+| 🎥 **Demo Video** | https://youtu.be/G2c4WNlbrwI |
+| 💻 **GitHub Repository** | https://github.com/rigocrypto/arbinexus |
+| 📄 **Sitemap** | https://rigocrypto.github.io/arbinexus/sitemap.xml |
 
-![ArbiNexus Dashboard](./docs/image-1776220428939.png)
+---
 
-## Problem
+## Overview
 
-On-chain markets can temporarily diverge from oracle fair value.
-Most users cannot detect those windows fast enough, and most bots are opaque.
+ArbiNexus is a Solana-native signal intelligence layer that compares **Pyth oracle fair value** with **executable Jupiter market quotes** to detect price dislocations, filter noise using confidence intervals, and simulate trade decisions before any capital is deployed.
 
-## Solution
+Rather than showing raw prices alone, ArbiNexus asks a more useful question:
 
-ArbiNexus provides a transparent intelligence layer that:
+> **When is the executable market price meaningfully wrong relative to oracle fair value, after confidence and execution friction are considered?**
 
-1. Pulls oracle prices from Pyth (Hermes API)
-2. Pulls executable market quotes from Jupiter v6
-3. Computes spread and net edge after fee estimates
-4. Classifies signals as BUY_MARKET, SELL_MARKET, or NO_TRADE
-5. Surfaces rationale and confidence context for each signal
-6. Simulates trade outcomes in paper-trade mode
+The result is a decision-oriented dashboard for traders who want explainable, execution-aware signals without building custom oracle and routing infrastructure.
 
-## Why Now
+Built for the **Colosseum Hackathon**.
 
-Solana now has the right combination of low-latency execution, deep liquidity routing,
-and high-frequency oracle infrastructure.
-As tokenized assets mature, oracle-vs-market dislocations become more important to
-detect and explain in real time.
+---
+
+## The Problem
+
+On-chain prices are not always aligned with fair value. On Solana, users often see:
+
+- Fragmented liquidity across venues
+- Delayed market response to new information
+- Executable prices that differ from displayed reference prices
+- Noise that makes many apparent opportunities non-actionable
+
+Most dashboards simply show market data. They do not explain whether a quoted difference is meaningful, tradable, or just noise.
+
+For active traders and market-aware DeFi users, the real challenge is not seeing more prices — it is knowing **when an executable price dislocation is actually worth acting on**.
+
+---
+
+## The Solution
+
+ArbiNexus detects oracle-to-market price dislocations and surfaces **potentially actionable trade signals** using:
+
+- **Pyth** for fair-value reference pricing
+- **Jupiter** for executable route-aware quote pricing
+- **Confidence interval filtering** to suppress oracle-noise false positives
+- **Paper-trade simulation layer** to preview trades before committing capital
+
+This makes ArbiNexus not just a price monitor, but a **signal engine** built around execution-aware decision support.
+
+---
+
+## Why Solana
+
+- **Sub-second finality** makes arbitrage execution realistic
+- **Low transaction fees** make small spreads profitable
+- **Jupiter** aggregates Solana liquidity across all major DEXs
+- **Pyth Network** provides high-frequency oracle data natively on Solana
+- **Maturing ecosystem** of tokenized assets and RWAs
+
+---
+
+## What Is Live Today
+
+The current MVP includes:
+
+- ✅ Live **Pyth oracle** integration
+- ✅ Live **Jupiter executable quote** integration
+- ✅ Price dislocation signal generation for SOL and ETH
+- ✅ Confidence-aware filtering
+- ✅ Conservative net signal model (0.25% execution cost estimate)
+- ✅ Live updates via **SSE streaming**
+- ✅ Paper-trade simulation with route and estimated return preview
+- ✅ Dashboard with health indicators, rationale, and wallet context
+- ✅ Solana Wallet Adapter integration (Phantom, Solflare, wallet-standard)
+- ✅ Multilingual landing page (English + Spanish)
+- ✅ Hardened security posture with CI audit workflow
+
+---
 
 ## Architecture
 
-![System Architecture](./docs/system-architecture.png)
+```
+External Data Sources
+			 │
+			 ├── Pyth Hermes REST API
+			 │   └── Returns: price, confidence, publish_time, exponent
+			 │
+			 └── Jupiter v6 Quote API
+					 └── Returns: inAmount, outAmount, route plan
+								│
+								▼
+			 Shared SDK (packages/sdk)
+			 ├── pyth.ts        — Feed ID registry + exponent normalization
+			 ├── jupiter.ts     — Quote fetch with fallback endpoint chain
+			 └── arbitrage.ts   — Spread + signal classification
+								│
+								▼
+			 Fastify API (apps/api)
+			 ├── /health
+			 ├── /prices
+			 ├── /opportunities
+			 ├── /simulate
+			 └── /stream/opportunities (SSE)
+								│
+								▼
+			 Next.js Dashboard (apps/web)
+			 ├── Opportunities table with signals + rationale
+			 ├── Health badges (Pyth / Jupiter / cache age)
+			 ├── Profitable-only filter toggle
+			 ├── Per-row Simulate / Track / Ignore actions
+			 ├── Trust & Explainability panel
+			 └── Wallet integration with live SOL balance
 
-```text
-Pyth Hermes + Jupiter v6
-					|
-					v
-packages/sdk (pyth.ts, jupiter.ts, arbitrage.ts)
-					|
-					v
-apps/api (Fastify)
-	- /prices
-	- /opportunities
-	- /simulate
-	- /execute (simulated hook)
-	- /stream/opportunities (SSE)
-					|
-					v
-apps/web (Next.js)
-	- Opportunities table
-	- Trust panel
-	- Health badges
-	- Inline simulation
-	- Wallet balance
+			 Astro Landing Page (apps/site)
+			 ├── Multilingual (EN + ES) with i18n routing
+			 ├── SEO meta + Open Graph + JSON-LD
+			 ├── Auto-deployed to GitHub Pages
+			 └── Sitemap + robots.txt
 ```
 
-Detailed diagram and flow: see [docs/architecture.md](docs/architecture.md).
+---
 
 ## Signal Logic
 
-```text
-SpreadPct = (OraclePrice - MarketPrice) / OraclePrice * 100
-NetPct    = SpreadPct - EstimatedFeesPct
-
-if NetPct > threshold and outside confidence band  -> BUY_MARKET
-if NetPct < -threshold and outside confidence band -> SELL_MARKET
-otherwise                                          -> NO_TRADE
+### Core formula
 ```
+Spread %  = (Oracle Price - Market Price) / Oracle Price × 100
+Net %     = Spread % - Execution Cost Estimate (0.25%)
+```
+
+### Classification
+```
+Net % > +0.10%   →  BUY_MARKET   (market underpriced vs oracle)
+Net % < -0.10%   →  SELL_MARKET  (market overpriced vs oracle)
+Otherwise        →  NO_TRADE     (within noise threshold)
+```
+
+### Confidence filter
+If the spread does not meaningfully exceed the oracle confidence band, ArbiNexus classifies the signal as `NO_TRADE` to reduce false positives.
+
+### Example signal
+```
+Asset:                SOL
+Oracle (Pyth):        $162.42
+Market (Jupiter):     $161.79
+Spread:               0.388%
+Execution cost:       0.25%
+Net signal:           0.138%
+Confidence check:     Passed
+Classification:       BUY_MARKET
+
+Rationale: Executable quote is below oracle fair value beyond
+the confidence and modeled cost threshold.
+```
+
+---
 
 ## Tech Stack
 
-- Next.js 15 + TypeScript + Tailwind (frontend)
-- Fastify + Zod (backend)
+### Frontend Dashboard (apps/web)
+- Next.js 15 + TypeScript
+- Tailwind CSS + shadcn/ui
+- Solana Wallet Adapter
 - Server-Sent Events for live updates
-- Pyth Hermes + Jupiter v6 integrations
-- Solana wallet adapter + Solana web3
-- pnpm workspaces + Turborepo monorepo
+- Recharts for visualization
 
-## API Endpoints
+### Backend API (apps/api)
+- Fastify + TypeScript
+- Short-TTL price cache with graceful degradation
+- SSE streaming endpoint
+- @fastify/cors
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /health | API health status |
-| GET | /prices | Current oracle and market prices |
-| GET | /opportunities | Current classified opportunities |
-| GET | /opportunities/:symbol | Signal detail for one symbol |
-| POST | /simulate | Paper-trade simulation output |
-| POST | /execute | Devnet-safe simulated execution hook |
-| GET | /stream/opportunities | SSE stream of opportunities |
+### Landing Page (apps/site)
+- Astro 6 (static site)
+- Multilingual (i18n routing)
+- Tailwind CSS
+- Auto-deployed to GitHub Pages via GitHub Actions
 
-## Running Locally
+### Shared SDK (packages/sdk)
+- `pyth.ts` — Hermes REST integration
+- `jupiter.ts` — v6 quote API with fallback chain
+- `arbitrage.ts` — spread computation + signal classification
+
+### Solana Integrations
+- **Pyth Network** — oracle price feeds (SOL, ETH)
+- **Jupiter v6** — best-route executable quotes
+- **Solana Wallet Adapter** — Phantom, Solflare, wallet-standard
+- **Solana Devnet** — safe execution environment
+
+### Monorepo
+- pnpm workspaces
+- Turborepo
+- Anchor program skeleton (programs/arbinexus)
+
+---
+
+## Project Structure
+
+```
+arbinexus/
+├── apps/
+│   ├── web/                    # Next.js dashboard (port 3000)
+│   ├── api/                    # Fastify backend (port 3001)
+│   └── site/                   # Astro landing page (port 4321)
+├── packages/
+│   ├── sdk/                    # Shared market data SDK
+│   ├── ui/                     # Shared UI components
+│   ├── types/                  # Shared TypeScript types
+│   └── config/                 # Shared tsconfig/eslint
+├── programs/
+│   └── arbinexus/              # Anchor program skeleton
+├── docs/
+│   ├── architecture.md
+│   ├── demo-script.md
+│   ├── judging-map.md
+│   └── submission-copy.md
+├── .github/
+│   └── workflows/
+│       ├── deploy-site.yml     # Auto-deploy landing page
+│       └── security-audit.yml  # Weekly security audit
+├── SECURITY.md
+└── README.md
+```
+
+---
+
+## Getting Started
 
 ### Prerequisites
-
-- Node.js 18+
+- Node.js 22.12.0+
 - pnpm 8+
+- Phantom or Solflare browser extension (optional, for wallet features)
 
 ### Install
 
 ```bash
+git clone https://github.com/rigocrypto/arbinexus.git
+cd arbinexus
 pnpm install
 ```
 
-### Configure
+### Environment Variables
 
-Create env files from templates where needed.
+Create `apps/api/.env`:
 
-API defaults are centered on devnet and local development.
-
-### Start
-
-```bash
-# API
-pnpm --filter @arbinexus/api dev
-
-# Web
-pnpm --filter @arbinexus/web dev
+```env
+SOLANA_NETWORK=devnet
+SOLANA_RPC_URL=https://api.devnet.solana.com
+JUPITER_API_BASE=https://lite-api.jup.ag
+PYTH_HERMES_URL=https://hermes.pyth.network
+TRACKED_SYMBOLS=SOL,ETH
+OPPORTUNITY_NET_THRESHOLD_PCT=0.10
+API_CACHE_TTL_MS=5000
 ```
 
-- Dashboard: http://localhost:3000
-- API health: http://localhost:3001/health
+Create `apps/web/.env.local`:
 
-## Demo Flow (2 minutes)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_SOLANA_NETWORK=devnet
+```
 
-1. Show live health badges (Pyth and Jupiter states)
-2. Show opportunities table with spread, net, signal, rationale
-3. Toggle actionable-only filter
-4. Run Simulate Trade on a row and explain the result
-5. Use Trust and Explainability panel to describe decision policy
+### Run
 
-Full script: see [docs/demo-script.md](docs/demo-script.md).
+```bash
+# Terminal 1 — API backend
+pnpm --filter @arbinexus/api dev
 
-## Demo Video
+# Terminal 2 — Dashboard
+pnpm --filter @arbinexus/web dev
 
-- [ArbiNexus Video Demo (YouTube)](https://youtu.be/G2c4WNlbrwI)
-- [Local Backup Demo File](./docs/ArbiNexus-Video-Demo.mp4)
+# Terminal 3 — Landing page (optional, for local development)
+pnpm --filter @arbinexus/site dev
+```
 
-## Landing Page
+### Open
 
-ArbiNexus now includes a static marketing site at `apps/site` for GitHub Pages.
+| Service | URL |
+|---------|-----|
+| Dashboard | http://localhost:3000 |
+| API health | http://localhost:3001/health |
+| Live stream | http://localhost:3001/stream/opportunities |
+| Landing page | http://localhost:4321 |
 
-- Local dev: `pnpm site:dev`
-- Build only: `pnpm site:build`
-- Expected production URL: `https://rigocrypto.github.io/arbinexus/`
+---
 
-Language routes:
+## API Endpoints
 
-- English: `/arbinexus/`
-- Spanish: `/arbinexus/es/`
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Service health and version |
+| `GET` | `/prices` | Live oracle + market prices |
+| `GET` | `/opportunities` | Classified arbitrage signals |
+| `GET` | `/opportunities/:symbol` | Single asset signal detail |
+| `POST` | `/simulate` | Paper-trade simulation result |
+| `POST` | `/execute` | Devnet execution hook |
+| `GET` | `/stream/opportunities` | SSE live opportunity stream |
 
-### GitHub Pages Setup
+### Sample `/opportunities` response
 
-1. Go to repository Settings > Pages.
-2. In Build and deployment, select Source: GitHub Actions.
-3. Push to `main` with changes under `apps/site/**`.
-4. Workflow `.github/workflows/deploy-site.yml` builds and deploys automatically.
+```json
+{
+	"status": "ok",
+	"mode": "live",
+	"health": {
+		"pyth": "live",
+		"jupiter": "live",
+		"cacheAge": 3
+	},
+	"opportunities": [
+		{
+			"symbol": "SOL",
+			"oraclePrice": 182.43,
+			"marketPrice": 180.91,
+			"spreadPct": 0.834,
+			"netOpportunityPct": 0.584,
+			"signal": "BUY_MARKET",
+			"actionable": true,
+			"confidence": 0.12,
+			"rationale": "Market underpriced vs oracle by 0.584% net of fees",
+			"timestamp": "2025-05-01T14:32:01.000Z"
+		}
+	]
+}
+```
 
-## Judging Criteria Alignment
+---
 
-See [docs/judging-map.md](docs/judging-map.md) for a direct mapping to technical execution,
-originality, usability, and ecosystem fit.
+## What Makes ArbiNexus Different
+
+Most dashboards show prices. ArbiNexus is different because it is:
+
+- **Executable-price aware** — uses Jupiter quotes, not just displayed market prices
+- **Confidence filtered** — reduces false positives using oracle confidence data
+- **Decision-oriented** — classifies and explains each signal
+- **Simulation-first** — lets users preview trades before committing capital
+- **Transparent** — exposes provider health, rationale, and trust context
+
+In short, ArbiNexus does not try to show *everything*. It tries to show **what matters**.
+
+---
 
 ## Current Limitations
 
-- Asset set is intentionally narrow for MVP reliability
-- /execute remains simulated by design for hackathon safety
-- Opportunity frequency depends on live market conditions
-- Local wallet ecosystem may emit non-blocking peer warnings
+ArbiNexus is an MVP and makes several explicit tradeoffs:
 
-## Project Structure
+- Supported assets currently limited to **SOL and ETH**
+- Execution cost model uses a **fixed conservative assumption** (0.25%)
+- Simulation is **paper-trade only**
+- Signal frequency depends on real-time market conditions
+- Designed as a **decision-support layer**, not a fully autonomous execution bot
 
-```text
-apps/
-	web/      Next.js dashboard
-	api/      Fastify API service
-packages/
-	sdk/      market data and arbitrage logic
-	types/    shared contracts
-	ui/       shared UI primitives
-	config/   shared configuration
-programs/
-	arbinexus/ Anchor skeleton
-docs/
-	architecture.md
-	demo-script.md
-	judging-map.md
-```
+These limitations are intentional for scope and reliability.
 
-## Security Notes
+---
 
+## Roadmap
+
+### Near-term
+- Route-specific dynamic fee modeling
+- Broader supported asset coverage
+- Alerts and monitoring (Telegram/Discord webhooks)
+- Wallet-driven simulation context
+- Improved signal history and tracking
+- Custom domain deployment
+
+### Long-term
+- On-chain execution via Jupiter swap integration
+- Anchor vault for automated strategy execution
+- API access for signal consumers
+- Multi-market coverage
+- Tokenized RWA price dislocation monitoring
+- Additional language support (Portuguese, French)
+
+---
+
+## Internationalization
+
+The landing page is available in:
+
+- 🇺🇸 **English** — https://rigocrypto.github.io/arbinexus/
+- 🇪🇸 **Spanish** — https://rigocrypto.github.io/arbinexus/es/
+
+Both versions feature complete localization including:
+- Native typography and accents
+- Localized SEO meta tags
+- hreflang alternates
+- Per-language Open Graph data
+
+---
+
+## Security
+
+ArbiNexus follows responsible security practices:
+
+- ✅ No secrets committed to the repository
+- ✅ All `.env` files excluded via `.gitignore`
+- ✅ CORS restricted to known frontend origins
+- ✅ Paper-trade mode by default — no funds at risk
+- ✅ Devnet-safe execution environment
+- ✅ Dependency overrides for transitive vulnerabilities
+- ✅ Automated weekly CI security audits
+- ✅ Documented accepted-risk posture
+
+For details on dependency vulnerabilities and remediation status, see [SECURITY.md](./SECURITY.md).
+
+To report a vulnerability, please follow the responsible disclosure process in `SECURITY.md`.
+
+---
+
+## Deployment
+
+### Landing page
+The Astro landing page auto-deploys to GitHub Pages on every push to `main` that touches `apps/site/**`.
+
+Deployment workflow: `.github/workflows/deploy-site.yml`
+
+Live at: https://rigocrypto.github.io/arbinexus/
+
+### Dashboard and API
+The dashboard and API are designed for local development during the hackathon MVP phase. Production deployment paths (Vercel, Railway, Fly.io) are planned for post-hackathon iteration.
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [docs/architecture.md](./docs/architecture.md) | System architecture and data flow |
+| [docs/demo-script.md](./docs/demo-script.md) | 2-minute demo presentation script |
+| [docs/judging-map.md](./docs/judging-map.md) | Hackathon judging criteria alignment |
+| [docs/submission-copy.md](./docs/submission-copy.md) | Submission form copy and pitch text |
+| [SECURITY.md](./SECURITY.md) | Security policy and known vulnerabilities |
+
+---
+
+## Why It Matters
+
+As on-chain markets mature, the gap between **reference value** and **executable value** becomes increasingly important.
+
+ArbiNexus is built around that gap. It helps users answer a simple but powerful question:
+
+> **Is the market quote wrong enough, in a meaningful and executable way, to matter?**
+
+That is the foundation for a much more useful class of trading and market-intelligence tools on Solana.
+
+---
+
+## Builder
+
+**Rigoberto Vivas** (Rigo Crypto)
+
+Solo founder and full-stack builder focused on crypto-native product development, automation, trading systems, and execution-aware market tooling. Based in Orlando, FL.
+
+Previous work includes **CropFolioCoin** (agricultural asset tokenization) and **ArbiMind** (the earlier arbitrage system that led directly to ArbiNexus).
+
+**Contact:**
+- 📧 Email: rigovivas71@gmail.com
+- 📱 Phone: +1 (407) 454-2981
+- 💻 GitHub: [@rigocrypto](https://github.com/rigocrypto)
+
+---
+
+## Closing Line
+
+**ArbiNexus is not just a dashboard. It is an explainable, execution-aware signal engine for identifying meaningful price dislocations on Solana.**
+
+---
 
 ## License
 
-MIT
+MIT License — see [LICENSE](./LICENSE) for details.
 
-## Resources
+---
 
-- [Project Google Doc (Submission Writeup)][submission-writeup]
+## Acknowledgments
 
-[submission-writeup]: https://docs.google.com/document/d/1IAtaavGbsZUqsc8mlG6DQvJF13wl1W3P4xfAvNqsygk/edit?usp=sharing
+Built with infrastructure from:
+
+- [Pyth Network](https://pyth.network/) — high-frequency oracle data
+- [Jupiter](https://jup.ag/) — Solana liquidity aggregation
+- [Solana](https://solana.com/) — fast, low-cost execution layer
+- [Astro](https://astro.build/) — landing page framework
+- [Next.js](https://nextjs.org/) — dashboard framework
+- [Fastify](https://fastify.dev/) — API framework
+
+Built for the [Colosseum Hackathon](https://arena.colosseum.org/).
