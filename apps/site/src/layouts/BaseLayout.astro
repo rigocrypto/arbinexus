@@ -20,11 +20,14 @@ const base = '/arbinexus';
 const url = `${site}${base}${path}`;
 const ogImage = `${site}${base}/brand/og-image.png`;
 const navText = locale === 'es'
-  ? { problem: 'Problema', how: 'Como funciona', demo: 'Demo', roadmap: 'Roadmap' }
+  ? { problem: 'Problema', how: 'Cómo funciona', demo: 'Demo', roadmap: 'Hoja de ruta' }
   : { problem: 'Problem', how: 'How It Works', demo: 'Demo', roadmap: 'Roadmap' };
 const footer = locale === 'es'
-  ? { tagline: 'No solo mostramos precios. Mostramos cuando estan mal.', docs: 'Docs' }
+  ? { tagline: 'No solo mostramos precios. Mostramos cuándo están mal.', docs: 'Documentación' }
   : { tagline: "Don't just show prices. Show when they are wrong.", docs: 'Docs' };
+const brandSubtitle = locale === 'es' ? 'Inteligencia de precios basada en oráculos' : 'Oracle-informed price intelligence';
+const primaryNavLabel = locale === 'es' ? 'Principal' : 'Primary';
+const languageSelectorLabel = locale === 'es' ? 'Selector de idioma' : 'Language selector';
 ---
 
 <!doctype html>
@@ -77,16 +80,16 @@ const footer = locale === 'es'
         <img src={`${import.meta.env.BASE_URL}brand/arbinexus-mark.png`} alt="ArbiNexus mark" />
         <div>
           <strong>ArbiNexus</strong>
-          <span>Oracle-informed price intelligence</span>
+          <span>{brandSubtitle}</span>
         </div>
       </a>
-      <nav class="top-nav" aria-label="Primary">
+      <nav class="top-nav" aria-label={primaryNavLabel}>
         <a href="#problem">{navText.problem}</a>
         <a href="#how-it-works">{navText.how}</a>
         <a href="#demo">{navText.demo}</a>
         <a href="#roadmap">{navText.roadmap}</a>
       </nav>
-      <div class="lang-switcher" aria-label="Language selector">
+      <div class="lang-switcher" aria-label={languageSelectorLabel}>
         <a href={`${import.meta.env.BASE_URL}`} aria-current={locale === 'en' ? 'page' : undefined}>EN</a>
         <a href={`${import.meta.env.BASE_URL}es/`} aria-current={locale === 'es' ? 'page' : undefined}>ES</a>
       </div>
