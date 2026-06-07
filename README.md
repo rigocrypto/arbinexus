@@ -448,9 +448,11 @@ Deployment workflow: `.github/workflows/deploy-site.yml`
 Live at: https://rigocrypto.github.io/arbinexus/
 
 ### Dashboard and API
-- **Demo app (dashboard):** https://arbinexus.vercel.app — deploy `apps/web` to Vercel (`apps/web/vercel.json` included)
+- **Demo app (dashboard):** deploy `apps/web` to Vercel — set **Root Directory** to `apps/web` in project settings (required for the pnpm monorepo)
 - **API:** deploy `apps/api` to Render (`render.yaml` included); set `NEXT_PUBLIC_API_URL` on Vercel to the API URL
 - **Landing page link:** set `PUBLIC_DEMO_APP_URL` when building `apps/site` (configured in `.github/workflows/deploy-site.yml`)
+
+> **Note:** If `arbinexus.vercel.app` shows a generic "Create Next App" page, that project is not linked to this repo. Import `rigocrypto/arbinexus`, set root directory to `apps/web`, and redeploy.
 
 Local development: `pnpm dev` (web on `:3000`, API on `:3001`).
 
