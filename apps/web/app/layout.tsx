@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 
 import "./globals.css";
-import { SolanaWalletProvider } from "../components/wallet-provider";
+import { ClientProviders } from "../components/client-providers";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
       <body className="font-[var(--font-space-grotesk)] antialiased">
-        <SolanaWalletProvider>{children}</SolanaWalletProvider>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );
