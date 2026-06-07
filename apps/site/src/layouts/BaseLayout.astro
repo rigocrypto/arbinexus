@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { demoAppUrl, demoVideoUrl } from '../config/site';
 
 const {
   title,
@@ -20,11 +21,11 @@ const base = '/arbinexus';
 const url = `${site}${base}${path}`;
 const ogImage = `${site}${base}/brand/og-image.png`;
 const navText = locale === 'es'
-  ? { problem: 'Problema', how: 'Cómo funciona', demo: 'Demo', roadmap: 'Hoja de ruta' }
-  : { problem: 'Problem', how: 'How It Works', demo: 'Demo', roadmap: 'Roadmap' };
+  ? { problem: 'Problema', how: 'Cómo funciona', demo: 'Demo', app: 'App', roadmap: 'Hoja de ruta' }
+  : { problem: 'Problem', how: 'How It Works', demo: 'Demo', app: 'App', roadmap: 'Roadmap' };
 const footer = locale === 'es'
-  ? { tagline: 'No solo mostramos precios. Mostramos cuándo están mal.', docs: 'Documentación' }
-  : { tagline: "Don't just show prices. Show when they are wrong.", docs: 'Docs' };
+  ? { tagline: 'No solo mostramos precios. Mostramos cuándo están mal.', app: 'Demo', video: 'Video', docs: 'Documentación' }
+  : { tagline: "Don't just show prices. Show when they are wrong.", app: 'Demo App', video: 'Video', docs: 'Docs' };
 const brandSubtitle = locale === 'es' ? 'Inteligencia de precios basada en oráculos' : 'Oracle-informed price intelligence';
 const primaryNavLabel = locale === 'es' ? 'Principal' : 'Primary';
 const languageSelectorLabel = locale === 'es' ? 'Selector de idioma' : 'Language selector';
@@ -87,6 +88,7 @@ const languageSelectorLabel = locale === 'es' ? 'Selector de idioma' : 'Language
         <a href="#problem">{navText.problem}</a>
         <a href="#how-it-works">{navText.how}</a>
         <a href="#demo">{navText.demo}</a>
+        <a href={demoAppUrl} target="_blank" rel="noreferrer">{navText.app}</a>
         <a href="#roadmap">{navText.roadmap}</a>
       </nav>
       <div class="lang-switcher" aria-label={languageSelectorLabel}>
@@ -104,7 +106,8 @@ const languageSelectorLabel = locale === 'es' ? 'Selector de idioma' : 'Language
       </div>
       <div class="footer-links">
         <a href="https://github.com/rigocrypto/arbinexus" target="_blank" rel="noreferrer">GitHub</a>
-        <a href="https://youtu.be/G2c4WNlbrwI" target="_blank" rel="noreferrer">Demo</a>
+        <a href={demoAppUrl} target="_blank" rel="noreferrer">{footer.app}</a>
+        <a href={demoVideoUrl} target="_blank" rel="noreferrer">{footer.video}</a>
         <a href="https://github.com/rigocrypto/arbinexus/blob/main/docs/submission-copy.md" target="_blank" rel="noreferrer">{footer.docs}</a>
       </div>
     </footer>
