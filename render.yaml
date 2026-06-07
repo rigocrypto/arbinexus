@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: arbinexus-api
+    runtime: node
+    plan: free
+    buildCommand: pnpm install && pnpm --filter @arbinexus/api build
+    startCommand: pnpm --filter @arbinexus/api start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ALLOWED_ORIGINS
+        value: https://arbinexus.vercel.app,https://rigocrypto.github.io

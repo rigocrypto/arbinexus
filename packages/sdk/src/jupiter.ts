@@ -46,7 +46,7 @@ export async function fetchJupiterPrice(inputMint: string, outputMint: string, a
   for (const base of candidates) {
     const url = buildQuoteUrl(base, inputMint, outputMint, amountLamports);
 
-    let response: Response;
+    let response;
     try {
       response = await fetch(url);
     } catch {

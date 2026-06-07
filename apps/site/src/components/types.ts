@@ -16,6 +16,7 @@ export type LandingContent = {
   roadmapNear: string[];
   roadmapLong: string[];
   ctas: {
+    app: string;
     demo: string;
     github: string;
     docs: string;
