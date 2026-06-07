@@ -1,5 +1,6 @@
 ---
 import type { LandingContent } from './types';
+import { demoAppUrl, demoVideoUrl } from '../config/site';
 
 const { content } = Astro.props as { content: LandingContent };
 const isEs = content.locale === 'es';
@@ -77,7 +78,8 @@ const screenshots = [
       <h1>{content.headline}</h1>
       <p class="lede">{content.subheadline}</p>
       <div class="cta-row">
-        <a class="button primary" href="https://youtu.be/G2c4WNlbrwI" target="_blank" rel="noreferrer">{content.ctas.demo}</a>
+        <a class="button primary" href={demoAppUrl} target="_blank" rel="noreferrer">{content.ctas.app}</a>
+        <a class="button" href={demoVideoUrl} target="_blank" rel="noreferrer">{content.ctas.demo}</a>
         <a class="button" href="https://github.com/rigocrypto/arbinexus" target="_blank" rel="noreferrer">{content.ctas.github}</a>
         <a class="button ghost" href="https://github.com/rigocrypto/arbinexus/blob/main/docs/submission-copy.md" target="_blank" rel="noreferrer">{content.ctas.docs}</a>
       </div>
@@ -167,6 +169,10 @@ const screenshots = [
       <p class="section-kicker">{content.sections.demo}</p>
       <h2>{content.demoBlurb}</h2>
       <p>{demoParagraph}</p>
+      <div class="cta-row">
+        <a class="button primary" href={demoAppUrl} target="_blank" rel="noreferrer">{content.ctas.app}</a>
+        <a class="button ghost" href={demoVideoUrl} target="_blank" rel="noreferrer">{content.ctas.demo}</a>
+      </div>
     </div>
     <div class="video-shell inset">
       <iframe

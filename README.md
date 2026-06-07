@@ -448,7 +448,11 @@ Deployment workflow: `.github/workflows/deploy-site.yml`
 Live at: https://rigocrypto.github.io/arbinexus/
 
 ### Dashboard and API
-The dashboard and API are designed for local development during the hackathon MVP phase. Production deployment paths (Vercel, Railway, Fly.io) are planned for post-hackathon iteration.
+- **Demo app (dashboard):** https://arbinexus.vercel.app — deploy `apps/web` to Vercel (`apps/web/vercel.json` included)
+- **API:** deploy `apps/api` to Render (`render.yaml` included); set `NEXT_PUBLIC_API_URL` on Vercel to the API URL
+- **Landing page link:** set `PUBLIC_DEMO_APP_URL` when building `apps/site` (configured in `.github/workflows/deploy-site.yml`)
+
+Local development: `pnpm dev` (web on `:3000`, API on `:3001`).
 
 ---
 

@@ -8,19 +8,10 @@ import { registerOpportunitiesRoute } from "./routes/opportunities.js";
 import { registerOpportunitiesStreamRoute } from "./routes/opportunities-stream.js";
 import { registerSimulateRoute } from "./routes/simulate.js";
 import { registerExecuteRoute } from "./routes/execute.js";
+import { isAllowedOrigin } from "./lib/allowed-origins.js";
 
 const port = Number(process.env.PORT ?? 3001);
 const host = process.env.HOST ?? "0.0.0.0";
-
-function isAllowedOrigin(origin: string) {
-  const localhostOrigins = ["http://localhost:3000", "http://127.0.0.1:3000"];
-  if (localhostOrigins.includes(origin)) {
-    return true;
-  }
-
-  // Allow common private-network hosts for local multi-device testing.
-  return /^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)\d+\.\d+:3000$/i.test(origin);
-}
 
 async function bootstrap() {
   const app = Fastify({ logger: true });

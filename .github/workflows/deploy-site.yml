@@ -40,6 +40,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build site
+        env:
+          PUBLIC_DEMO_APP_URL: https://arbinexus.vercel.app
         run: pnpm --filter @arbinexus/site build
 
       - name: Upload Pages artifact
