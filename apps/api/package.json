@@ -18,6 +18,9 @@
     "fastify": "^5.1.0",
     "zod": "^3.23.8"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
     "@types/node": "^22.10.1",
 "tsx": "^4.19.2",
