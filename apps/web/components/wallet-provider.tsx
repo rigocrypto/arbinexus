@@ -2,9 +2,9 @@
 
 import "@solana/wallet-adapter-react-ui/styles.css";
 
+import { useMemo } from "react";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-
 export function SolanaWalletProvider({ children }: { children: React.ReactNode }) {
   const endpoint = process.env.NEXT_PUBLIC_RPC_URL || "https://api.devnet.solana.com";
 
@@ -17,9 +17,15 @@ export function SolanaWalletProvider({ children }: { children: React.ReactNode }
     console.error("Wallet error:", error);
   };
 
+  // NOTE: For demo stability we don't instantiate adapters here to avoid
+  // runtime compatibility issues during development. The wallet modal
+  // will be empty until adapters are wired. Use the mock connect button
+  // in the market header for demo flows.
+  const wallets: any[] = [];
+
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={[]} autoConnect={false} onError={handleWalletError}>
+      <WalletProvider wallets={wallets} autoConnect={false} onError={handleWalletError}>
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
