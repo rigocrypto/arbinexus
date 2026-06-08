@@ -19,7 +19,11 @@ import { isAllowedOrigin } from "./lib/allowed-origins.js";
  * - Vercel serverless (api/index.ts): calls app.ready() then emits requests
  */
 export function buildApp() {
-  const app = Fastify({ logger: true });
+  // logger: false avoids Pino's thread-stream/worker_threads in serverless bundles.
+  // Set LOG_LEVEL=info locally to re-enable (e.g. in .env or pnpm dev).
+  const app = Fastify({
+    logger: process.env.LOG_LEVEL ? { level: process.env.LOG_LEVEL } : false,
+  });
 
   app.register(cors, {
     origin: (origin, cb) => {
