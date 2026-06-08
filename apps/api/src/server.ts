@@ -3,12 +3,13 @@ import { buildApp } from "./app.js";
 const port = Number(process.env.PORT ?? 3001);
 const host = process.env.HOST ?? "0.0.0.0";
 
-async function bootstrap() {
-  const app = await buildApp();
-  await app.listen({ port, host });
-}
+const app = buildApp();
 
-bootstrap().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+app.listen({ port, host })
+  .then(() => {
+    app.log.info(`API server running on ${host}:${port}`);
+  })
+  .catch((error) => {
+    app.log.error(error);
+    process.exit(1);
+  });
