@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useState, useEffect } from "react";
+import { useDemoWallet } from "../../context/DemoWalletContext";
 
 export default function MarketHeader({ market }: any) {
   const { publicKey, connected } = useWallet();
@@ -64,35 +64,13 @@ export default function MarketHeader({ market }: any) {
 }
 
 function MockConnectButton() {
-  const [mock, setMock] = useState<string | null>(null);
+  const { mockPublicKey, mockConnect, mockDisconnect } = useDemoWallet();
 
-  useEffect(() => {
-    const existing = (window as any).__ARBI_PUBLIC_KEY || null;
-    setMock(existing);
-  }, []);
-
-  const connect = () => {
-    const mockKey = "DemoPubKey" + Math.random().toString(36).slice(2, 10);
-    (window as any).__ARBI_PUBLIC_KEY = mockKey;
-    setMock(mockKey);
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new Event("arbi:mockConnect"));
-    }
-  };
-
-  const disconnect = () => {
-    delete (window as any).__ARBI_PUBLIC_KEY;
-    setMock(null);
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new Event("arbi:mockDisconnect"));
-    }
-  };
-
-  if (mock) {
+  if (mockPublicKey) {
     return (
       <>
-        <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">{mock}</span>
-        <button className="ml-2 text-xs text-red-600" onClick={disconnect}>
+        <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">{mockPublicKey}</span>
+        <button className="ml-2 text-xs text-red-600" onClick={mockDisconnect}>
           Mock Disconnect
         </button>
       </>
@@ -102,7 +80,7 @@ function MockConnectButton() {
   return (
     <button
       className="ml-3 px-2 py-1 text-xs bg-indigo-50 border border-indigo-100 rounded"
-      onClick={connect}
+      onClick={mockConnect}
     >
       Mock Connect
     </button>

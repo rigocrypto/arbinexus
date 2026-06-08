@@ -2,6 +2,7 @@
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { convictionConfig } from "../config/conviction.config";
+import { useDemoWallet } from "../context/DemoWalletContext";
 
 const STORAGE_KEY = "arbinexus_conviction_market_v1";
 
@@ -26,9 +27,10 @@ function normalizeMarket(market: any) {
 // using the program IDL and `@project-serum/anchor` or `@solana/web3.js` transaction builders.
 export function useConvictionTx() {
   const { publicKey } = useWallet();
+  const { mockPublicKey } = useDemoWallet();
 
   const stakeLocal = (marketId: string, side: "yes" | "no", amount: number) => {
-    const userPub = publicKey?.toBase58() || (window as any).__ARBI_PUBLIC_KEY;
+    const userPub = publicKey?.toBase58() ?? mockPublicKey;
     if (!userPub) throw new Error("Wallet not connected (or use mock connect)");
 
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -75,7 +77,7 @@ export function useConvictionTx() {
   };
 
   const claimLocal = (marketId: string) => {
-    const userPub = publicKey?.toBase58() || (window as any).__ARBI_PUBLIC_KEY;
+    const userPub = publicKey?.toBase58() ?? mockPublicKey;
     if (!userPub) throw new Error("Wallet not connected (or use mock connect)");
 
     const raw = localStorage.getItem(STORAGE_KEY);

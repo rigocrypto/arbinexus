@@ -10,10 +10,11 @@ import StakeForm from "../../components/conviction/StakeForm";
 import UserStakeInfo from "../../components/conviction/UserStakeInfo";
 import PnlCard from "../../components/conviction/PnlCard";
 import DemoResolverCard from "../../components/conviction/DemoResolverCard";
-import { useMarket } from "../../hooks/useMarket";
+import { DemoWalletProvider } from "../../context/DemoWalletContext";
+import { MarketProvider, useMarketContext } from "../../context/MarketContext";
 
-export default function ConvictionMarketPage() {
-  const { market, loading } = useMarket();
+function ConvictionMarketContent() {
+  const { market, loading } = useMarketContext();
 
   if (loading) return <div className="p-8">Loading market…</div>;
 
@@ -52,6 +53,16 @@ export default function ConvictionMarketPage() {
       </div>
       <Footer />
     </SolanaWalletProvider>
+  );
+}
+
+export default function ConvictionMarketPage() {
+  return (
+    <DemoWalletProvider>
+      <MarketProvider>
+        <ConvictionMarketContent />
+      </MarketProvider>
+    </DemoWalletProvider>
   );
 }
 

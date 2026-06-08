@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMarket } from "../../hooks/useMarket";
 import { convictionConfig } from "../../config/conviction.config";
+import { useMarketContext } from "../../context/MarketContext";
 
 export default function DemoResolverCard() {
-  const { market, loading, updateMarket, resolveMarket, resetMarket } = useMarket();
+  const { market, loading, updateMarket, resolveMarket, resetMarket } = useMarketContext();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 

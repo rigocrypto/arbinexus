@@ -90,12 +90,11 @@ export function useMarket() {
     setMarket(fresh);
   };
 
-  const getUserStake = (marketId: string) => {
+  const getUserStake = (marketId: string, pub: string | null) => {
+    if (!pub) return null;
     const raw = localStorage.getItem(`${STORAGE_KEY}_stakes`);
     if (!raw) return null;
     const stakes = JSON.parse(raw);
-    const pub = (window as any).__ARBI_PUBLIC_KEY || null;
-    if (!pub) return null;
     return stakes[marketId]?.[pub] || null;
   };
 

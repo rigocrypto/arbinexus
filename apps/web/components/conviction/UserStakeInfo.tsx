@@ -1,32 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useMarket } from "../../hooks/useMarket";
 import { useConvictionTx } from "../../hooks/useConvictionTx";
+import { useDemoWallet } from "../../context/DemoWalletContext";
+import { useMarketContext } from "../../context/MarketContext";
 
 export default function UserStakeInfo({ market }: any) {
   const { publicKey } = useWallet();
-  const { getUserStake, updateMarket } = useMarket();
+  const { mockPublicKey } = useDemoWallet();
+  const { getUserStake, updateMarket } = useMarketContext();
   const { claimLocal } = useConvictionTx();
-  const [effectivePub, setEffectivePub] = useState<string | null>(publicKey ? publicKey.toBase58() : (window as any).__ARBI_PUBLIC_KEY || null);
+  const effectivePub = publicKey?.toBase58() ?? mockPublicKey;
   const [message, setMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    const on = () => setEffectivePub(publicKey ? publicKey.toBase58() : (window as any).__ARBI_PUBLIC_KEY || null);
-    window.addEventListener("arbi:mockConnect", on);
-    window.addEventListener("arbi:mockDisconnect", on);
-    return () => {
-      window.removeEventListener("arbi:mockConnect", on);
-      window.removeEventListener("arbi:mockDisconnect", on);
-    };
-  }, [publicKey]);
-
-  useEffect(() => {
-    setMessage(null);
-  }, [market.status, effectivePub]);
-
-  const stake = effectivePub ? getUserStake(market.id) : null;
+  const stake = getUserStake(market.id, effectivePub);
   const isResolved = market.status === "resolved";
   const isWinner = !!stake && isResolved && stake.side.toUpperCase() === market.winningSide;
   const canClaim = isWinner && !stake?.claimed;

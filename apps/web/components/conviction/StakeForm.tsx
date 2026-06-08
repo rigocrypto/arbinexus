@@ -1,31 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useMarket } from "../../hooks/useMarket";
 import { useConvictionTx } from "../../hooks/useConvictionTx";
+import { useDemoWallet } from "../../context/DemoWalletContext";
+import { useMarketContext } from "../../context/MarketContext";
 
 export default function StakeForm({ market }: any) {
   const [amount, setAmount] = useState<string>("0.1");
   const [error, setError] = useState<string>("");
   const { publicKey } = useWallet();
   const { stakeLocal } = useConvictionTx();
-  const { updateMarket } = useMarket();
+  const { updateMarket } = useMarketContext();
 
+  const { mockPublicKey } = useDemoWallet();
   const disabled = Date.now() >= new Date(market.deadline).getTime() || market.status !== "open";
-  const [mockConnected, setMockConnected] = useState<boolean>(!!(typeof window !== "undefined" && (window as any).__ARBI_PUBLIC_KEY));
-
-  useEffect(() => {
-    const on = () => setMockConnected(!!(window as any).__ARBI_PUBLIC_KEY);
-    window.addEventListener("arbi:mockConnect", on);
-    window.addEventListener("arbi:mockDisconnect", on);
-    return () => {
-      window.removeEventListener("arbi:mockConnect", on);
-      window.removeEventListener("arbi:mockDisconnect", on);
-    };
-  }, []);
-
-  const connected = !!(publicKey || mockConnected);
+  const connected = !!(publicKey || mockPublicKey);
 
   const onStake = async (side: "yes" | "no") => {
     setError("");
