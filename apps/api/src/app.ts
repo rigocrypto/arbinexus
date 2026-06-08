@@ -16,11 +16,14 @@ import { isAllowedOrigin } from "./lib/allowed-origins.js";
  * when app.ready() or app.listen() is called by the caller.
  *
  * - Local dev (server.ts): calls app.listen()
- * - Vercel serverless (api/index.ts): calls app.ready() then emits requests
+ * - Vercel serverless (api/index.ts): calls app.ready() then inject()s requests
+ *
+ * Uses Fastify v4 (CJS-native) — v5 is ESM-only and its import.meta.url usage
+ * breaks Vercel's ncc bundler at runtime.
  */
 export function buildApp() {
-  // logger: false avoids Pino's thread-stream/worker_threads in serverless bundles.
-  // Set LOG_LEVEL=info locally to re-enable (e.g. in .env or pnpm dev).
+  // logger: false avoids Pino thread-stream worker_threads in serverless bundles.
+  // Set LOG_LEVEL=info locally (in .env or shell) to re-enable.
   const app = Fastify({
     logger: process.env.LOG_LEVEL ? { level: process.env.LOG_LEVEL } : false,
   });
