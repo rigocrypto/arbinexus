@@ -9,35 +9,41 @@ async function buildReadyApp() {
   return app;
 }
 
+async function readBody(req: IncomingMessage): Promise<Buffer | undefined> {
+  const chunks: Buffer[] = [];
+  for await (const chunk of req) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk as Buffer));
+  }
+  return chunks.length > 0 ? Buffer.concat(chunks) : undefined;
+}
+
 export default async function handler(
   req: IncomingMessage,
   res: ServerResponse
 ) {
+  // Diagnostic ping — responds before touching Fastify.
+  // If this works but / or /health crash, the bug is inside buildApp()/app.ready().
+  // If this also crashes, the module itself failed to load.
+  if (req.url === "/__ping") {
+    res.statusCode = 200;
+    res.setHeader("content-type", "application/json");
+    res.end(JSON.stringify({ ok: true, handler: "alive" }));
+    return;
+  }
+
   try {
     if (!appPromise) {
       appPromise = buildReadyApp();
     }
     const app = await appPromise;
 
-    // Buffer request body for POST/PUT/PATCH before passing to inject()
-    let payload: Buffer | undefined;
-    if (req.method !== "GET" && req.method !== "HEAD") {
-      const chunks: Buffer[] = [];
-      await new Promise<void>((resolve, reject) => {
-        req.on("data", (chunk: Buffer) =>
-          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
-        );
-        req.on("end", resolve);
-        req.on("error", reject);
-      });
-      if (chunks.length > 0) payload = Buffer.concat(chunks);
-    }
+    const method = req.method ?? "GET";
+    const payload = ["POST", "PUT", "PATCH", "DELETE"].includes(method)
+      ? await readBody(req)
+      : undefined;
 
-    // inject() awaits the full Fastify request/response cycle before returning,
-    // which is required in serverless — server.emit() fires and forgets,
-    // causing Vercel to see no response and return FUNCTION_INVOCATION_FAILED.
     const response = await app.inject({
-      method: (req.method ?? "GET") as any,
+      method: method as any,
       url: req.url ?? "/",
       headers: req.headers as Record<string, string | string[]>,
       payload,
@@ -47,7 +53,7 @@ export default async function handler(
     for (const [key, val] of Object.entries(response.headers)) {
       if (val !== undefined) res.setHeader(key, val as string | string[]);
     }
-    res.end(response.rawPayload);
+    res.end(response.body);
   } catch (error) {
     console.error("[arbinexus-api] handler error:", error);
     if (!res.headersSent) {
@@ -57,6 +63,7 @@ export default async function handler(
         JSON.stringify({
           error: "Internal Server Error",
           message: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
         })
       );
     }
