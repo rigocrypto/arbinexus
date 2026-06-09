@@ -1,8 +1,8 @@
 {
   "version": 2,
   "installCommand": "cd ../.. && pnpm install",
-  "buildCommand": "cd ../.. && pnpm --filter @arbinexus/api build:vercel",
+  "buildCommand": "cd ../.. && pnpm --filter @arbinexus/api build",
   "routes": [
-    { "src": "/(.*)", "dest": "/api/bundle.js" }
+    { "src": "/(.*)", "dest": "/api/index.ts" }
   ]
 }
