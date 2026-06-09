@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import Fastify from "fastify";
-import type { FastifyReply, HTTPMethods } from "fastify";
+import type { FastifyReply, InjectOptions } from "fastify";
 
 const app = Fastify({ logger: false });
 
@@ -24,8 +24,6 @@ app.get("/api/health", async (_req, reply: FastifyReply) => {
   return { ok: true };
 });
 
-// app.ready() in Fastify v4 returns FastifyInstance & PromiseLike<...>, not Promise<void>.
-// Cast to Promise<unknown> to satisfy TypeScript without fighting the overloads.
 let readyPromise: Promise<unknown> | null = null;
 
 async function ensureReady() {
@@ -43,7 +41,6 @@ async function readBody(req: IncomingMessage): Promise<Buffer | undefined> {
   return chunks.length > 0 ? Buffer.concat(chunks) : undefined;
 }
 
-// LightMyRequest.Response type from light-my-request (Fastify's inject library).
 interface InjectResponse {
   statusCode: number;
   headers: Record<string, string | string[] | number | undefined>;
@@ -57,19 +54,21 @@ export default async function handler(
   try {
     await ensureReady();
 
-    const method = (req.method || "GET") as HTTPMethods;
+    const method = (req.method || "GET").toUpperCase();
     const payload = ["POST", "PUT", "PATCH", "DELETE"].includes(method)
       ? await readBody(req)
       : undefined;
 
-    // app.inject() in Fastify v4 has overloaded return types; cast to the
-    // concrete response shape we need to avoid TS picking the chain overload.
-    const response = (await app.inject({
-      method,
+    const injectOptions: InjectOptions = {
+      method: method as InjectOptions["method"],
       url: req.url || "/",
       headers: req.headers as Record<string, string | string[]>,
       payload,
-    })) as unknown as InjectResponse;
+    };
+
+    const response = (await app.inject(
+      injectOptions
+    )) as unknown as InjectResponse;
 
     res.statusCode = response.statusCode;
     for (const [key, value] of Object.entries(response.headers)) {
