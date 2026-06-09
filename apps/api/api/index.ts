@@ -1,8 +1,62 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import Fastify from "fastify";
 import type { FastifyReply, InjectOptions } from "fastify";
+import { TOKEN_MINTS, computeOpportunity, getJupiterPrice, getPythPrice } from "@arbinexus/sdk";
+import type { Opportunity } from "@arbinexus/types";
 
 console.log("arbinexus-api function module loaded");
+
+// ── inline prices logic (no dotenv, no cors, no buildApp) ─────────────────
+const DEFAULT_FEE_ESTIMATE_PCT = 0.25;
+const DEFAULT_ASSET_SYMBOLS = ["SOL", "ETH"];
+
+async function getPricesInline(): Promise<unknown> {
+  const symbols = DEFAULT_ASSET_SYMBOLS;
+  const rows: { symbol: string; source: string; value: number }[] = [];
+
+  for (const sym of symbols) {
+    const pyth = await getPythPrice(sym, {});
+    if (pyth) rows.push({ symbol: `${sym}/USD`, source: "pyth", value: pyth.price });
+
+    const jup = await getJupiterPrice(sym, "USDC", {});
+    if (jup) rows.push({ symbol: `${sym}/USDC`, source: "jupiter", value: jup });
+  }
+
+  return {
+    ok: true,
+    network: "mainnet-beta",
+    mode: rows.length > 0 ? "live" : "mock",
+    sample: rows,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+async function getOpportunitiesInline(): Promise<{ items: Opportunity[]; count: number }> {
+  const symbols = DEFAULT_ASSET_SYMBOLS;
+  const items: Opportunity[] = [];
+
+  for (const sym of symbols) {
+    const pyth = await getPythPrice(sym, {});
+    const jup = await getJupiterPrice(sym, "USDC", {});
+    if (!pyth || !jup) continue;
+
+    items.push(
+      computeOpportunity({
+        symbol: sym,
+        oraclePrice: pyth.price,
+        marketPrice: jup,
+        confidenceAbs: pyth.confidenceAbs,
+        confidencePct: pyth.confidencePct,
+        inputMint: TOKEN_MINTS[sym],
+        outputMint: TOKEN_MINTS["USDC"],
+        options: { feeEstimatePct: DEFAULT_FEE_ESTIMATE_PCT, netThresholdPct: 0.1 },
+      })
+    );
+  }
+
+  return { items, count: items.length };
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 const app = Fastify({ logger: false });
 
@@ -13,6 +67,7 @@ app.get("/", async (_req, reply: FastifyReply) => {
     handler: "fastify-inline",
     service: "arbinexus-api",
     status: "running",
+    endpoints: ["/health", "/prices", "/opportunities"],
   };
 });
 
@@ -24,6 +79,16 @@ app.get("/health", async (_req, reply: FastifyReply) => {
 app.get("/api/health", async (_req, reply: FastifyReply) => {
   reply.header("x-arbinexus-handler", "fastify-inline");
   return { ok: true };
+});
+
+app.get("/prices", async (_req, reply: FastifyReply) => {
+  reply.header("x-arbinexus-handler", "fastify-inline");
+  return getPricesInline();
+});
+
+app.get("/opportunities", async (_req, reply: FastifyReply) => {
+  reply.header("x-arbinexus-handler", "fastify-inline");
+  return getOpportunitiesInline();
 });
 
 let readyPromise: Promise<unknown> | null = null;
