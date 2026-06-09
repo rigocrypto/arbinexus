@@ -1,36 +1,19 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import Fastify from "fastify";
-import type { FastifyReply, InjectOptions } from "fastify";
-
-const app = Fastify({ logger: false });
-
-app.get("/", async (_req, reply: FastifyReply) => {
-  reply.header("x-arbinexus-handler", "fastify-inline");
-  return {
-    ok: true,
-    handler: "fastify-inline",
-    service: "arbinexus-api",
-    status: "running",
-  };
-});
-
-app.get("/health", async (_req, reply: FastifyReply) => {
-  reply.header("x-arbinexus-handler", "fastify-inline");
-  return { ok: true };
-});
-
-app.get("/api/health", async (_req, reply: FastifyReply) => {
-  reply.header("x-arbinexus-handler", "fastify-inline");
-  return { ok: true };
-});
+import { buildApp } from "../src/app.js";
+import type { InjectOptions } from "fastify";
 
 let readyPromise: Promise<unknown> | null = null;
+let appInstance: ReturnType<typeof buildApp> | null = null;
 
-async function ensureReady() {
+async function getApp() {
+  if (!appInstance) {
+    appInstance = buildApp();
+  }
   if (!readyPromise) {
-    readyPromise = app.ready() as unknown as Promise<unknown>;
+    readyPromise = appInstance.ready() as unknown as Promise<unknown>;
   }
   await readyPromise;
+  return appInstance;
 }
 
 async function readBody(req: IncomingMessage): Promise<Buffer | undefined> {
@@ -52,7 +35,7 @@ export default async function handler(
   res: ServerResponse
 ) {
   try {
-    await ensureReady();
+    const app = await getApp();
 
     const method = (req.method || "GET").toUpperCase();
     const payload = ["POST", "PUT", "PATCH", "DELETE"].includes(method)
