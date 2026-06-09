@@ -1,15 +1,27 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import Fastify from "fastify";
+import Fastify, { FastifyReply } from "fastify";
 
 const app = Fastify({ logger: false });
 
-app.get("/", async () => ({
-  ok: true,
-  service: "arbinexus-api",
-  status: "running",
-}));
+app.get("/", async (_req, reply: FastifyReply) => {
+  reply.header("x-arbinexus-handler", "fastify-inline");
+  return {
+    ok: true,
+    handler: "fastify-inline",
+    service: "arbinexus-api",
+    status: "running",
+  };
+});
 
-app.get("/health", async () => ({ ok: true }));
+app.get("/health", async (_req, reply: FastifyReply) => {
+  reply.header("x-arbinexus-handler", "fastify-inline");
+  return { ok: true };
+});
+
+app.get("/api/health", async (_req, reply: FastifyReply) => {
+  reply.header("x-arbinexus-handler", "fastify-inline");
+  return { ok: true };
+});
 
 let readyPromise: Promise<void> | null = null;
 
