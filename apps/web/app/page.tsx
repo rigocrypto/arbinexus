@@ -7,6 +7,7 @@ import { HeroSection } from "../components/hero-section";
 import { KpiCards } from "../components/kpi-cards";
 import { MarketCharts } from "../components/market-charts";
 import { OpportunitiesTable } from "../components/opportunities-table";
+import { PricesPanel } from "../components/prices-panel";
 import { RightRail } from "../components/right-rail";
 
 export default function HomePage() {
@@ -29,6 +30,10 @@ export default function HomePage() {
 
             <section id="oracle-feeds" className="scroll-mt-20">
               <CoreSignalCards />
+            </section>
+
+            <section id="prices" className="scroll-mt-20">
+              <PricesPanel />
             </section>
 
             <section className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">

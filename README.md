@@ -23,6 +23,18 @@
 
 ---
 
+## Live Production API
+
+| Resource | URL |
+|----------|-----|
+| Base URL | https://arbinexus-api.vercel.app |
+| Health check | https://arbinexus-api.vercel.app/health |
+| Live prices | https://arbinexus-api.vercel.app/prices |
+| Opportunities | https://arbinexus-api.vercel.app/opportunities |
+| SSE stream | https://arbinexus-api.vercel.app/stream/opportunities |
+
+---
+
 ## Overview
 
 ArbiNexus is a Solana-native signal intelligence layer that compares **Pyth oracle fair value** with **executable Jupiter market quotes** to detect price dislocations, filter noise using confidence intervals, and simulate trade decisions before any capital is deployed.

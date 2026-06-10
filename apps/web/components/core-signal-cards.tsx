@@ -6,8 +6,8 @@ const cards = [
   {
     icon: Globe,
     label: "Network",
-    value: "devnet",
-    hint: "Hackathon-safe default"
+    value: "mainnet-beta",
+    hint: "Live mainnet oracle and market data"
   },
   {
     icon: Cpu,
