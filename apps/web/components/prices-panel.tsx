@@ -25,7 +25,7 @@ interface AssetPrices {
 function groupByBase(sample: PriceSample[]): AssetPrices[] {
   const map = new Map<string, AssetPrices>();
   for (const entry of sample) {
-    const base = entry.symbol.split("/")[0];
+    const base = entry.symbol.split("/")[0] ?? entry.symbol;
     if (!map.has(base)) map.set(base, { base, oracle: null, market: null });
     const asset = map.get(base)!;
     if (entry.source === "pyth") asset.oracle = entry.value;
