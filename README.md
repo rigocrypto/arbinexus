@@ -11,10 +11,22 @@
 
 ---
 
+## Live Demo
+
+- **Web Dashboard:** https://arbinexus-web.vercel.app
+- **Production API:** https://arbinexus-api.vercel.app
+- **Conviction Market Demo:** https://arbinexus-web.vercel.app/conviction-market
+
+> `arbinexus-web.vercel.app` = visual dashboard · `arbinexus-api.vercel.app` = JSON API backend
+
+---
+
 ## 🌐 Live Links
 
 | Resource | URL |
 |----------|-----|
+| 🖥️ **Web Dashboard** | https://arbinexus-web.vercel.app |
+| 🎰 **Conviction Market Demo** | https://arbinexus-web.vercel.app/conviction-market |
 | 🌍 **Landing Page (English)** | https://rigocrypto.github.io/arbinexus/ |
 | 🇪🇸 **Landing Page (Español)** | https://rigocrypto.github.io/arbinexus/es/ |
 | 🎥 **Demo Video** | https://youtu.be/G2c4WNlbrwI |
@@ -23,15 +35,39 @@
 
 ---
 
-## Live Production API
+## Production API Status
 
-| Resource | URL |
-|----------|-----|
-| Base URL | https://arbinexus-api.vercel.app |
-| Health check | https://arbinexus-api.vercel.app/health |
-| Live prices | https://arbinexus-api.vercel.app/prices |
-| Opportunities | https://arbinexus-api.vercel.app/opportunities |
-| SSE stream | https://arbinexus-api.vercel.app/stream/opportunities |
+The ArbiNexus API is live on Vercel and running on Solana `mainnet-beta`.
+
+| Endpoint | Status | Description |
+|---|---|---|
+| `GET /` | ✅ Live | Service status and endpoint list |
+| `GET /health` | ✅ Live | Health check |
+| `GET /prices` | ✅ Live | Live Pyth + Jupiter prices for SOL and ETH |
+| `GET /opportunities` | ✅ Live | Arbitrage signal computation |
+| `POST /simulate` | Ready | Simulation endpoint |
+| `POST /execute` | Ready | Execution endpoint |
+
+---
+
+## Stable Checkpoint
+
+The production API has been tagged as `v1.0.0-stable`.
+
+- Stable commit: `1d11d59`
+- Network: `mainnet-beta`
+- API: https://arbinexus-api.vercel.app
+- Web: https://arbinexus-web.vercel.app
+
+This checkpoint represents the first end-to-end validated production deployment with live Pyth + Jupiter market data and real arbitrage opportunity scoring.
+
+---
+
+## Arbitrage Signal Logic
+
+ArbiNexus compares oracle reference prices from Pyth against market prices from Jupiter. The opportunity engine estimates spread, fees, net edge, confidence, and trade signal.
+
+Signals may return `NO_TRADE` when the market spread is below the estimated fee threshold or within oracle confidence/noise bounds. This is intentional and protects the system from false-positive arbitrage execution.
 
 ---
 
