@@ -316,17 +316,38 @@ const executeSchema = z.object({
 });
 
 // ── CORS helper ───────────────────────────────────────────────────────────
-const LOCALHOST_ORIGINS = new Set(["http://localhost:3000", "http://127.0.0.1:3000"]);
-const PRIVATE_NET = /^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)\d+\.\d+:3000$/i;
+const PRODUCTION_ORIGINS = new Set([
+  "https://arbinexus-web.vercel.app",
+  "https://arbinexus-api.vercel.app",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+]);
+const PRIVATE_NET = /^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)\d+\.\d+:\d+$/i;
 
-function isAllowedOrigin(origin: string): boolean {
-  if (LOCALHOST_ORIGINS.has(origin)) return true;
+function isAllowedOrigin(origin: string | undefined): boolean {
+  if (!origin) return false;
+  if (PRODUCTION_ORIGINS.has(origin)) return true;
   if (PRIVATE_NET.test(origin)) return true;
+  // Allow any Vercel preview deployment URL that belongs to this project
+  if (origin.endsWith(".vercel.app") && origin.includes("arbinexus")) return true;
   const configured = (process.env.ALLOWED_ORIGINS ?? "")
     .split(",")
     .map((o) => o.trim())
     .filter(Boolean);
   return configured.includes(origin);
+}
+
+function setCorsHeaders(req: IncomingMessage, res: ServerResponse): void {
+  const origin = Array.isArray(req.headers.origin)
+    ? req.headers.origin[0]
+    : req.headers.origin;
+  if (isAllowedOrigin(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin as string);
+    res.setHeader("Vary", "Origin");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Max-Age", "86400");
 }
 
 // ── Fastify app ───────────────────────────────────────────────────────────
@@ -336,7 +357,7 @@ function buildServerlessApp(): FastifyInstance {
   // CORS — manual hook (no @fastify/cors to avoid version mismatch with ncc)
   app.addHook("onRequest", async (request, reply) => {
     const origin = request.headers.origin;
-    if (origin && isAllowedOrigin(origin)) {
+    if (isAllowedOrigin(origin)) {
       reply.header("access-control-allow-origin", origin);
       reply.header("access-control-allow-credentials", "true");
       reply.header("vary", "Origin");
@@ -483,6 +504,14 @@ interface InjectResponse {
 }
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  setCorsHeaders(req, res);
+
+  if (req.method === "OPTIONS") {
+    res.statusCode = 204;
+    res.end();
+    return;
+  }
+
   if (req.url === "/__ping") {
     res.statusCode = 200;
     res.setHeader("content-type", "application/json");
