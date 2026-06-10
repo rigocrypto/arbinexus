@@ -73,7 +73,6 @@ export function OpportunitiesTable() {
 
   useEffect(() => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-    let fallbackTimer: ReturnType<typeof setInterval> | null = null;
     const hydrate = () =>
       fetch(`${baseUrl}/opportunities`)
         .then((res) => {
@@ -94,30 +93,13 @@ export function OpportunitiesTable() {
 
     void hydrate();
 
-    const stream = new EventSource(`${baseUrl}/stream/opportunities`);
-    stream.onmessage = (event) => {
-      const payload = JSON.parse(event.data) as OpportunitiesResponse;
-      setRows(payload.opportunities ?? payload.items ?? []);
-      setStatus(payload.status ?? "ok");
-      setHealth(payload.health ?? null);
-      setMessage(payload.message ?? null);
-      setUpdatedAt(payload.updatedAt ?? null);
-      setLoading(false);
-    };
-    stream.onerror = () => {
-      stream.close();
-      if (!fallbackTimer) {
-        fallbackTimer = setInterval(() => {
-          void hydrate();
-        }, 15_000);
-      }
-    };
+    // Serverless deployment does not support SSE — poll every 10 seconds instead
+    const pollTimer = setInterval(() => {
+      void hydrate();
+    }, 10_000);
 
     return () => {
-      stream.close();
-      if (fallbackTimer) {
-        clearInterval(fallbackTimer);
-      }
+      clearInterval(pollTimer);
     };
   }, []);
 
