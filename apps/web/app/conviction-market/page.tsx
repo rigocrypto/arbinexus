@@ -16,42 +16,60 @@ import { MarketProvider, useMarketContext } from "../../context/MarketContext";
 function ConvictionMarketContent() {
   const { market, loading } = useMarketContext();
 
-  if (loading) return <div className="p-8">Loading market…</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-slate-400 text-sm">Loading market…</div>
+      </div>
+    );
+  }
 
   return (
     <SolanaWalletProvider>
-      <SiteHeader />
-      <div className="p-8 max-w-5xl mx-auto">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
+      <div className="min-h-screen bg-[linear-gradient(135deg,#020617_0%,#0f172a_60%,#0c1428_100%)] relative">
+        {/* Subtle background glows */}
+        <div className="pointer-events-none fixed inset-0 overflow-hidden">
+          <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-violet-900/20 blur-3xl" />
+          <div className="absolute top-1/3 right-0 h-72 w-72 rounded-full bg-emerald-900/15 blur-3xl" />
+        </div>
+
+        <SiteHeader />
+
+        <main className="relative max-w-5xl mx-auto px-4 py-8 space-y-6">
+          {/* Hero card */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-8 backdrop-blur-sm">
             <MarketHeader market={market} />
           </div>
-        </div>
 
-        <div className="mt-6">
-          <PoolBars yesPool={market.yesPool} noPool={market.noPool} />
-        </div>
-
-        <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-gray-700">
-          <strong>Demo mode:</strong> Staking data is simulated locally until the Anchor program is connected.
-          No real SOL is transferred inside this app yet.
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <StakeForm market={market} />
-            <div className="mt-4">
-              <UserStakeInfo market={market} />
+          {/* Demo mode warning */}
+          <div className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-sm text-amber-200">
+            <span className="text-amber-400 text-base mt-0.5">⚠</span>
+            <div>
+              <span className="font-semibold text-amber-300">Demo mode:</span>{" "}
+              Staking data is simulated locally until the Anchor program is connected.
+              No real SOL is transferred inside this app.
             </div>
           </div>
 
-          <div>
-            <PnlCard externalUrl={market.externalPnlUrl} />
-            <DemoResolverCard />
+          {/* Main grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left column — pool + stake */}
+            <div className="lg:col-span-2 space-y-6">
+              <PoolBars yesPool={market.yesPool} noPool={market.noPool} />
+              <StakeForm market={market} />
+            </div>
+
+            {/* Right column — position + pnl + resolver */}
+            <div className="space-y-6">
+              <UserStakeInfo market={market} />
+              <PnlCard externalUrl={market.externalPnlUrl} />
+              <DemoResolverCard />
+            </div>
           </div>
-        </div>
+        </main>
+
+        <Footer />
       </div>
-      <Footer />
     </SolanaWalletProvider>
   );
 }
@@ -65,5 +83,3 @@ export default function ConvictionMarketPage() {
     </DemoWalletProvider>
   );
 }
-
-

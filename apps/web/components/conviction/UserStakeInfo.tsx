@@ -44,52 +44,52 @@ export default function UserStakeInfo({ market }: any) {
   };
 
   return (
-    <div className="p-4 border rounded bg-white shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Your Position</h3>
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+      <h3 className="text-lg font-semibold text-white mb-5">Your Position</h3>
       {stake ? (
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Side:</span>
-            <span className={`font-semibold ${stake.side === "yes" ? "text-green-600" : "text-red-600"}`}>
+        <div className="space-y-3 text-sm">
+          <div className="flex justify-between items-center">
+            <span className="text-slate-400">Side</span>
+            <span className={`font-bold text-base ${stake.side === "yes" ? "text-emerald-400" : "text-rose-400"}`}>
               {stake.side.toUpperCase()}
             </span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Amount:</span>
-            <span className="font-semibold">{stake.amount.toFixed(3)} SOL</span>
+          <div className="flex justify-between items-center">
+            <span className="text-slate-400">Amount</span>
+            <span className="font-semibold text-white">{stake.amount.toFixed(3)} SOL</span>
           </div>
-          <div className="flex justify-between pt-2 border-t">
-            <span className="text-gray-600">Est. Payout (if win):</span>
-            <span className="font-semibold text-green-600">{estimatedPayout()}</span>
+          <div className="flex justify-between items-center pt-3 border-t border-slate-800">
+            <span className="text-slate-400">Est. Payout (if win)</span>
+            <span className="font-semibold text-emerald-400">{estimatedPayout()}</span>
           </div>
 
-          {isResolved && !stake.claimed && isWinner && (
+          {canClaim && (
             <button
-              className="w-full mt-4 bg-indigo-600 text-white rounded px-3 py-2 hover:bg-indigo-700"
+              className="w-full mt-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold py-2.5 rounded-lg transition"
               onClick={onClaim}
             >
-              Claim payout
+              Claim Payout
             </button>
           )}
 
           {stake.claimed && (
-            <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
-              ✓ Claimed
+            <div className="mt-2 px-3 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-emerald-300">
+              ✓ Payout claimed
             </div>
           )}
 
           {isResolved && !isWinner && (
-            <div className="mt-2 p-2 bg-gray-50 border border-gray-200 rounded text-sm text-gray-700">
+            <div className="mt-2 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-400">
               Market resolved {market.winningSide}. Your stake did not win.
             </div>
           )}
 
           {message && (
-            <div className="mt-2 text-sm text-gray-700">{message}</div>
+            <div className="mt-2 text-sm text-slate-300">{message}</div>
           )}
         </div>
       ) : (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-slate-500">
           {effectivePub ? "You have not staked yet." : "Connect wallet to view your position."}
         </div>
       )}

@@ -10,28 +10,30 @@ export default function SiteHeader() {
   const isConvictionPage = pathname === "/conviction-market";
 
   return (
-    <header className="w-full border-b bg-white">
+    <header className="w-full border-b border-slate-800 bg-slate-950/95 backdrop-blur-sm sticky top-0 z-10">
       <div className="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => router.back()}
-            className="text-sm text-gray-600 bg-gray-50 border px-3 py-1 rounded hover:bg-gray-100"
+            className="text-sm text-slate-400 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg hover:bg-slate-700 hover:text-slate-200 transition"
           >
             ← Back
           </button>
           <Link
             href="/"
-            className="text-sm text-gray-600 bg-gray-50 border px-3 py-1 rounded hover:bg-gray-100"
+            className="text-sm text-slate-400 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg hover:bg-slate-700 hover:text-slate-200 transition"
           >
             Home
           </Link>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-900">ArbiNexus</span>
+          <span className="text-sm font-semibold text-white">ArbiNexus</span>
           <span
-            className={`rounded-full px-3 py-1 text-xs font-medium ${
-              isConvictionPage ? "bg-indigo-50 text-indigo-700" : "bg-gray-100 text-gray-700"
+            className={`rounded-full px-3 py-1 text-xs font-medium border ${
+              isConvictionPage
+                ? "bg-violet-500/20 text-violet-300 border-violet-500/40"
+                : "bg-slate-800 text-slate-400 border-slate-700"
             }`}
           >
             Conviction Market

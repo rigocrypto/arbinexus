@@ -39,14 +39,14 @@ export default function StakeForm({ market }: any) {
   };
 
   return (
-    <div className="p-4 border rounded bg-white shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Place Your Conviction Stake</h3>
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+      <h3 className="text-lg font-semibold text-white mb-5">Place Your Conviction Stake</h3>
 
-      <div className="text-sm text-gray-600 mb-3">
-        Amount of SOL to stake:
-      </div>
+      <label className="block text-sm text-slate-400 mb-2">
+        Amount of SOL to stake
+      </label>
       <input
-        className="w-full p-2 border rounded mb-3"
+        className="w-full p-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent mb-4 transition"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
         type="number"
@@ -55,19 +55,24 @@ export default function StakeForm({ market }: any) {
         placeholder="0.1"
       />
 
-      {error && <div className="text-sm text-red-600 mb-3">{error}</div>}
+      {error && (
+        <div className="mb-4 text-sm text-rose-400 bg-rose-500/10 border border-rose-500/30 rounded-lg px-3 py-2">
+          {error}
+        </div>
+      )}
 
       <div className="flex gap-3">
         <button
-          className="flex-1 bg-green-600 text-white p-2 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700"
+          type="button"
+          className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition"
           onClick={() => onStake("yes")}
           disabled={disabled || !connected}
         >
           ✓ Stake YES
         </button>
-
         <button
-          className="flex-1 bg-red-600 text-white p-2 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
+          type="button"
+          className="flex-1 bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition"
           onClick={() => onStake("no")}
           disabled={disabled || !connected}
         >
@@ -76,12 +81,12 @@ export default function StakeForm({ market }: any) {
       </div>
 
       {!connected && (
-        <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
-          Connect wallet via the modal button to stake (wallet button in header).
+        <div className="mt-4 px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-400">
+          Connect wallet via the header button to stake.
         </div>
       )}
       {disabled && (
-        <div className="mt-3 p-2 bg-gray-50 border border-gray-200 rounded text-xs text-gray-600">
+        <div className="mt-4 px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-500">
           Staking is closed for this market.
         </div>
       )}

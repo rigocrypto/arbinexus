@@ -7,28 +7,25 @@ export default function PnlCard({ externalUrl }: { externalUrl?: string }) {
   const isLive = !!externalUrl;
 
   return (
-    <div className="p-4 border rounded bg-white shadow-sm">
-      <h3 className="text-lg font-semibold">Public Conviction Market</h3>
-      <p className="text-sm text-gray-600 mt-2">
-        Pitch this project on PNL and let the Solana community stake SOL on whether it ships before the hackathon
-        deadline.
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+      <h3 className="text-lg font-semibold text-white">Public Conviction Market</h3>
+      <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+        Pitch this project on PNL and let the Solana community stake SOL on whether it ships before the hackathon deadline.
       </p>
 
-      <div className="mt-4 flex items-center gap-3">
+      <div className="mt-5 flex flex-col gap-3">
         <a
           href={url}
           target="_blank"
           rel="noreferrer"
-          className="bg-blue-600 text-white px-3 py-2 rounded"
+          className="inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-4 py-2.5 rounded-lg transition"
         >
           {isLive ? "View Live PNL Market" : "Pitch this Project on PNL"}
+          <span className="text-xs opacity-70">↗</span>
         </a>
-
-        {isLive ? (
-          <span className="text-sm text-gray-500">Linked PNL market: {url}</span>
-        ) : (
-          <span className="text-sm text-gray-500">Opens pnl.market to create a public market.</span>
-        )}
+        <p className="text-xs text-slate-500">
+          {isLive ? `Linked: ${url}` : "Opens pnl.market to create a public conviction market."}
+        </p>
       </div>
     </div>
   );
